@@ -14,6 +14,7 @@ public class Cell extends Pane {
 	Node view;
 
 	public Cell() {
+		getStyleClass().add("cell");
 	}
 
 	public void addCellChild(Cell cell) {
@@ -37,10 +38,8 @@ public class Cell extends Pane {
 	}
 
 	public void setView(Node view) {
-
 		this.view = view;
 		getChildren().add(view);
-
 	}
 
 	public Node getView() {

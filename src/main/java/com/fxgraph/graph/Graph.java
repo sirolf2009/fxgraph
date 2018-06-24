@@ -54,6 +54,7 @@ public class Graph {
 	}
 
 	public void beginUpdate() {
+		getCellLayer().getChildren().clear();
 	}
 
 	public void endUpdate() {
