@@ -13,7 +13,7 @@ public class Model implements Serializable {
 
 	private static final long serialVersionUID = 172247271876446110L;
 
-	private final ICell graphParent;
+	private final ICell root;
 
 	private List<ICell> allCells;
 	private transient List<ICell> addedCells;
@@ -24,7 +24,7 @@ public class Model implements Serializable {
 	private transient List<IEdge> removedEdges;
 
 	public Model() {
-		graphParent = new AbstractCell() {
+		root = new AbstractCell() {
 			@Override
 			public Region getGraphic(Graph graph) {
 				return null;
@@ -104,9 +104,9 @@ public class Model implements Serializable {
 	 * @param cellList
 	 */
 	public void attachOrphansToGraphParent(List<ICell> cellList) {
-		for(final ICell cell : cellList) {
-			if(cell.getCellParents().size() == 0) {
-				graphParent.addCellChild(cell);
+		for (final ICell cell : cellList) {
+			if (cell.getCellParents().size() == 0) {
+				root.addCellChild(cell);
 			}
 		}
 	}
@@ -117,9 +117,13 @@ public class Model implements Serializable {
 	 * @param cellList
 	 */
 	public void disconnectFromGraphParent(List<ICell> cellList) {
-		for(final ICell cell : cellList) {
-			graphParent.removeCellChild(cell);
+		for (final ICell cell : cellList) {
+			root.removeCellChild(cell);
 		}
+	}
+
+	public ICell getRoot() {
+		return root;
 	}
 
 	public void merge() {

@@ -6,7 +6,7 @@ import java.util.Random;
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
 
-public class RandomLayout extends Layout {
+public class RandomLayout implements Layout {
 
 	private final Random rnd = new Random();
 
@@ -14,7 +14,7 @@ public class RandomLayout extends Layout {
 	public void execute(Graph graph) {
 		final List<ICell> cells = graph.getModel().getAllCells();
 
-		for(final ICell cell : cells) {
+		for (final ICell cell : cells) {
 			final double x = rnd.nextDouble() * 500;
 			final double y = rnd.nextDouble() * 500;
 

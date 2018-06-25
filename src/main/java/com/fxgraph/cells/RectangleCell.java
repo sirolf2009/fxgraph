@@ -9,6 +9,12 @@ import javafx.scene.shape.Rectangle;
 
 public class RectangleCell extends AbstractCell {
 
+	private final String text;
+
+	public RectangleCell(String text) {
+		this.text = text;
+	}
+
 	@Override
 	public Region getGraphic(Graph graph) {
 		final Rectangle view = new Rectangle(50, 50);
@@ -16,6 +22,15 @@ public class RectangleCell extends AbstractCell {
 		view.setStroke(Color.DODGERBLUE);
 		view.setFill(Color.DODGERBLUE);
 		return new Pane(view);
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	@Override
+	public String toString() {
+		return text;
 	}
 
 }

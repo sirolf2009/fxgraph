@@ -9,6 +9,12 @@ import javafx.scene.shape.Polygon;
 
 public class TriangleCell extends AbstractCell {
 
+	private final String text;
+
+	public TriangleCell(String text) {
+		this.text = text;
+	}
+
 	@Override
 	public Region getGraphic(Graph graph) {
 		final double width = 50;
@@ -20,6 +26,15 @@ public class TriangleCell extends AbstractCell {
 		view.setFill(Color.RED);
 
 		return new Pane(view);
+	}
+
+	@Override
+	public String toString() {
+		return text;
+	}
+
+	public String getText() {
+		return text;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.fxgraph.graph;
 import com.fxgraph.cells.RectangleCell;
 import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.Edge;
+import com.fxgraph.layout.AbegoTreeLayout;
 import com.fxgraph.layout.RandomLayout;
 
 import javafx.application.Application;
@@ -28,24 +29,24 @@ public class MainApp extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
-		addGraphComponents();
-
-		graph.layout(new RandomLayout());
+		addTreeComponents();
+		graph.layout(new AbegoTreeLayout());
 	}
 
+	@SuppressWarnings("unused")
 	private void addGraphComponents() {
 
 		final Model model = graph.getModel();
 
 		graph.beginUpdate();
 
-		final ICell cellA = new RectangleCell();
-		final ICell cellB = new RectangleCell();
-		final ICell cellC = new RectangleCell();
-		final ICell cellD = new TriangleCell();
-		final ICell cellE = new TriangleCell();
-		final ICell cellF = new RectangleCell();
-		final ICell cellG = new RectangleCell();
+		final ICell cellA = new RectangleCell("");
+		final ICell cellB = new RectangleCell("");
+		final ICell cellC = new RectangleCell("");
+		final ICell cellD = new TriangleCell("");
+		final ICell cellE = new TriangleCell("");
+		final ICell cellF = new RectangleCell("");
+		final ICell cellG = new RectangleCell("");
 
 		model.addCell(cellA);
 		model.addCell(cellB);
@@ -68,6 +69,40 @@ public class MainApp extends Application {
 
 		graph.endUpdate();
 
+		graph.layout(new RandomLayout());
+	}
+
+	@SuppressWarnings("unused")
+	private void addTreeComponents() {
+
+		final Model model = graph.getModel();
+
+		graph.beginUpdate();
+
+		final ICell cellA = new RectangleCell("cellA");
+		final ICell cellB = new RectangleCell("cellB");
+		final ICell cellC = new RectangleCell("cellC");
+		final ICell cellD = new TriangleCell("cellD");
+		final ICell cellE = new TriangleCell("cellE");
+		final ICell cellF = new RectangleCell("cellF");
+		final ICell cellG = new RectangleCell("cellG");
+
+		model.addCell(cellA);
+		model.addCell(cellB);
+		model.addCell(cellC);
+		model.addCell(cellD);
+		model.addCell(cellE);
+		model.addCell(cellF);
+		model.addCell(cellG);
+
+		model.addEdge(cellA, cellB);
+		model.addEdge(cellA, cellC);
+		model.addEdge(cellB, cellD);
+		model.addEdge(cellB, cellE);
+		model.addEdge(cellC, cellF);
+		model.addEdge(cellC, cellG);
+
+		graph.endUpdate();
 	}
 
 	public static void main(String[] args) {
