@@ -1,21 +1,21 @@
 # FXGraph
 
-FXGraph is java graph visualizer. It's a continuation of a post I found on stackoverflow. I will be probably expand on it some more, but pull requests are appreciated.
-
+FXGraph is javafx graph visualizer. It's a continuation of a post I found on stackoverflow. I will be probably expand on it some more, but pull requests are appreciated.
 You can find the original question here: https://stackoverflow.com/questions/30679025/graph-visualisation-like-yfiles-in-javafx
 
 ## Screenshot
 ![Screenshot](screenshot.png)
 
 ## Download
-You can get find on maven central
+You can get it from maven central
 ```xml
 <dependency>
 	<groupId>com.sirolf2009</groupId>
 	<artifactId>fxgraph</artifactId>
-	<name>fxgraph</name>
+	<version>0.0.1</version>
 </dependency>
 ``` 
+Note: the current version 0.0.2-SNAPSHOT, is not backwards compatible with 0.0.1.
 
 ## Usage
 You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code is as follows
