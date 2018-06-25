@@ -23,9 +23,9 @@
 			</roles>
 		</developer>
 	</developers>
-	
+
 	<description>FXGraph is java graph visualizer.</description>
-	
+
 	<url>https://github.com/sirolf2009/fxgraph</url>
 
 	<packaging>jar</packaging>
@@ -75,7 +75,7 @@
 
 		</plugins>
 	</build>
-	
+
 	<licenses>
 		<license>
 			<name>GNU General Public License v3.0</name>
@@ -101,7 +101,7 @@
 		</repository>
 	</distributionManagement>
 
-  <profiles>
+	<profiles>
 		<profile>
 			<id>release</id>
 			<build>
@@ -171,6 +171,15 @@
 				</plugins>
 			</build>
 		</profile>
-</profiles>
+	</profiles>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 </project>

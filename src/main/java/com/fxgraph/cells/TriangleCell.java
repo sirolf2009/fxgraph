@@ -1,13 +1,16 @@
 package com.fxgraph.cells;
 
-import com.fxgraph.graph.Cell;
+import com.fxgraph.graph.Graph;
 
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class TriangleCell extends Cell {
+public class TriangleCell extends AbstractCell {
 
-	public TriangleCell() {
+	@Override
+	public Region getGraphic(Graph graph) {
 		final double width = 50;
 		final double height = 50;
 
@@ -16,7 +19,7 @@ public class TriangleCell extends Cell {
 		view.setStroke(Color.RED);
 		view.setFill(Color.RED);
 
-		setView(view);
+		return new Pane(view);
 	}
 
 }

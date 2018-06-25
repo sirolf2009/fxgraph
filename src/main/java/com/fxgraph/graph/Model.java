@@ -1,22 +1,35 @@
 package com.fxgraph.graph;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model {
+import com.fxgraph.cells.AbstractCell;
+import com.fxgraph.edges.Edge;
 
-	Cell graphParent;
+import javafx.scene.layout.Region;
 
-	List<Cell> allCells;
-	List<Cell> addedCells;
-	List<Cell> removedCells;
+public class Model implements Serializable {
 
-	List<Edge> allEdges;
-	List<Edge> addedEdges;
-	List<Edge> removedEdges;
+	private static final long serialVersionUID = 172247271876446110L;
+
+	private final ICell graphParent;
+
+	private List<ICell> allCells;
+	private transient List<ICell> addedCells;
+	private transient List<ICell> removedCells;
+
+	private List<IEdge> allEdges;
+	private transient List<IEdge> addedEdges;
+	private transient List<IEdge> removedEdges;
 
 	public Model() {
-		graphParent = new Cell();
+		graphParent = new AbstractCell() {
+			@Override
+			public Region getGraphic(Graph graph) {
+				return null;
+			}
+		};
 		// clear model, create lists
 		clear();
 	}
@@ -36,40 +49,52 @@ public class Model {
 		addedEdges.clear();
 	}
 
-	public List<Cell> getAddedCells() {
+	public void endUpdate() {
+		// every cell must have a parent, if it doesn't, then the graphParent is
+		// the parent
+		attachOrphansToGraphParent(getAddedCells());
+
+		// remove reference to graphParent
+		disconnectFromGraphParent(getRemovedCells());
+
+		// merge added & removed cells with all cells
+		merge();
+	}
+
+	public List<ICell> getAddedCells() {
 		return addedCells;
 	}
 
-	public List<Cell> getRemovedCells() {
+	public List<ICell> getRemovedCells() {
 		return removedCells;
 	}
 
-	public List<Cell> getAllCells() {
+	public List<ICell> getAllCells() {
 		return allCells;
 	}
 
-	public List<Edge> getAddedEdges() {
+	public List<IEdge> getAddedEdges() {
 		return addedEdges;
 	}
 
-	public List<Edge> getRemovedEdges() {
+	public List<IEdge> getRemovedEdges() {
 		return removedEdges;
 	}
 
-	public List<Edge> getAllEdges() {
+	public List<IEdge> getAllEdges() {
 		return allEdges;
 	}
 
-	public void addCell(Cell cell) {
+	public void addCell(ICell cell) {
 		addedCells.add(cell);
 	}
 
-	public void addEdge(Cell sourceCell, Cell targetCell) {
-		final Edge edge = new Edge(sourceCell, targetCell);
+	public void addEdge(ICell sourceCell, ICell targetCell) {
+		final IEdge edge = new Edge(sourceCell, targetCell);
 		addEdge(edge);
 	}
 
-	public void addEdge(Edge edge) {
+	public void addEdge(IEdge edge) {
 		addedEdges.add(edge);
 	}
 
@@ -78,9 +103,9 @@ public class Model {
 	 *
 	 * @param cellList
 	 */
-	public void attachOrphansToGraphParent(List<Cell> cellList) {
-		for (final Cell cell : cellList) {
-			if (cell.getCellParents().size() == 0) {
+	public void attachOrphansToGraphParent(List<ICell> cellList) {
+		for(final ICell cell : cellList) {
+			if(cell.getCellParents().size() == 0) {
 				graphParent.addCellChild(cell);
 			}
 		}
@@ -91,8 +116,8 @@ public class Model {
 	 *
 	 * @param cellList
 	 */
-	public void disconnectFromGraphParent(List<Cell> cellList) {
-		for (final Cell cell : cellList) {
+	public void disconnectFromGraphParent(List<ICell> cellList) {
+		for(final ICell cell : cellList) {
 			graphParent.removeCellChild(cell);
 		}
 	}

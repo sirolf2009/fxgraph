@@ -2,6 +2,7 @@ package com.fxgraph.graph;
 
 import com.fxgraph.cells.RectangleCell;
 import com.fxgraph.cells.TriangleCell;
+import com.fxgraph.edges.Edge;
 import com.fxgraph.layout.RandomLayout;
 
 import javafx.application.Application;
@@ -38,13 +39,13 @@ public class MainApp extends Application {
 
 		graph.beginUpdate();
 
-		final Cell cellA = new RectangleCell();
-		final Cell cellB = new RectangleCell();
-		final Cell cellC = new RectangleCell();
-		final Cell cellD = new TriangleCell();
-		final Cell cellE = new TriangleCell();
-		final Cell cellF = new RectangleCell();
-		final Cell cellG = new RectangleCell();
+		final ICell cellA = new RectangleCell();
+		final ICell cellB = new RectangleCell();
+		final ICell cellC = new RectangleCell();
+		final ICell cellD = new TriangleCell();
+		final ICell cellE = new TriangleCell();
+		final ICell cellF = new RectangleCell();
+		final ICell cellG = new RectangleCell();
 
 		model.addCell(cellA);
 		model.addCell(cellB);
@@ -60,7 +61,10 @@ public class MainApp extends Application {
 		model.addEdge(cellC, cellD);
 		model.addEdge(cellB, cellE);
 		model.addEdge(cellD, cellF);
-		model.addEdge(cellD, cellG);
+
+		final Edge edge = new Edge(cellD, cellG);
+		edge.textProperty().set("Edges can have text too!");
+		model.addEdge(edge);
 
 		graph.endUpdate();
 
