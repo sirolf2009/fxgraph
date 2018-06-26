@@ -1,6 +1,7 @@
 package com.fxgraph.graph;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fxgraph.layout.Layout;
@@ -23,13 +24,18 @@ public class Graph {
 	MouseGestures mouseGestures;
 
 	/**
-	 * the pane wrapper is necessary or else the scrollpane would always align the top-most and left-most child to the top and left eg when you drag the top child down, the entire scrollpane would move down
+	 * the pane wrapper is necessary or else the scrollpane would always align the
+	 * top-most and left-most child to the top and left eg when you drag the top
+	 * child down, the entire scrollpane would move down
 	 */
 	CellLayer cellLayer;
 
 	public Graph() {
+		this(new Model());
+	}
 
-		this.model = new Model();
+	public Graph(Model model) {
+		this.model = model;
 
 		canvas = new Group();
 		cellLayer = new CellLayer();
@@ -45,6 +51,8 @@ public class Graph {
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);
 
+		addEdges(getModel().getAllEdges());
+		addCells(getModel().getAllCells());
 	}
 
 	public ScrollPane getScrollPane() {
@@ -65,23 +73,34 @@ public class Graph {
 
 	public void endUpdate() {
 		// add components to graph pane
-		model.getAddedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCellLayer().getChildren().add(edgeGraphic));
-		model.getAddedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getCellLayer().getChildren().add(cellGraphic));
+		addEdges(model.getAddedEdges());
+		addCells(model.getAddedCells());
 
 		// remove components to graph pane
-		model.getRemovedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getCellLayer().getChildren().remove(cellGraphic));
-		model.getRemovedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCellLayer().getChildren().remove(edgeGraphic));
-
-		// make nodes draggable
-		model.getAddedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> mouseGestures.makeDraggable(cellGraphic));
+		model.getRemovedCells().stream().map(cell -> getGraphic(cell))
+				.forEach(cellGraphic -> getCellLayer().getChildren().remove(cellGraphic));
+		model.getRemovedEdges().stream().map(edge -> getGraphic(edge))
+				.forEach(edgeGraphic -> getCellLayer().getChildren().remove(edgeGraphic));
 
 		// clean up the model
 		getModel().endUpdate();
 
 	}
 
+	private void addEdges(List<IEdge> edges) {
+		edges.stream().map(edge -> getGraphic(edge))
+				.forEach(edgeGraphic -> getCellLayer().getChildren().add(edgeGraphic));
+	}
+
+	private void addCells(List<ICell> cells) {
+		cells.stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> {
+			getCellLayer().getChildren().add(cellGraphic);
+			mouseGestures.makeDraggable(cellGraphic);
+		});
+	}
+
 	public Region getGraphic(IGraphNode node) {
-		if(!graphics.containsKey(node)) {
+		if (!graphics.containsKey(node)) {
 			graphics.put(node, node.getGraphic(this));
 		}
 		return graphics.get(node);
