@@ -8,7 +8,7 @@ pipeline {
     }
     stage('archive') {
       steps {
-        junit(testResults: 'target/surefire-reports/', allowEmptyResults: true)
+        junit(testResults: 'target/surefire-reports/**', allowEmptyResults: true)
       }
     }
   }
