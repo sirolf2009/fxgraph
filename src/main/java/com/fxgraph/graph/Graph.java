@@ -46,7 +46,7 @@ public class Graph {
 
 		scrollPane = new ZoomableScrollPane(canvas);
 
-		graphics = new HashMap<IGraphNode, Region>();
+		graphics = new HashMap<>();
 
 		scrollPane.setFitToWidth(true);
 		scrollPane.setFitToHeight(true);
@@ -78,9 +78,9 @@ public class Graph {
 
 		// remove components to graph pane
 		model.getRemovedCells().stream().map(cell -> getGraphic(cell))
-				.forEach(cellGraphic -> getCellLayer().getChildren().remove(cellGraphic));
+		.forEach(cellGraphic -> getCellLayer().getChildren().remove(cellGraphic));
 		model.getRemovedEdges().stream().map(edge -> getGraphic(edge))
-				.forEach(edgeGraphic -> getCellLayer().getChildren().remove(edgeGraphic));
+		.forEach(edgeGraphic -> getCellLayer().getChildren().remove(edgeGraphic));
 
 		// clean up the model
 		getModel().endUpdate();
@@ -89,7 +89,7 @@ public class Graph {
 
 	private void addEdges(List<IEdge> edges) {
 		edges.stream().map(edge -> getGraphic(edge))
-				.forEach(edgeGraphic -> getCellLayer().getChildren().add(edgeGraphic));
+		.forEach(edgeGraphic -> getCellLayer().getChildren().add(edgeGraphic));
 	}
 
 	private void addCells(List<ICell> cells) {

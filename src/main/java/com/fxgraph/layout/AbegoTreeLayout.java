@@ -34,7 +34,7 @@ public class AbegoTreeLayout implements Layout {
 
 			@Override
 			public double getWidth(ICell tn) {
-				if (tn == graph.getModel().getRoot()) {
+				if(tn == graph.getModel().getRoot()) {
 					return 0;
 				}
 				return graph.getGraphic(tn).getWidth();
@@ -42,24 +42,25 @@ public class AbegoTreeLayout implements Layout {
 
 			@Override
 			public double getHeight(ICell tn) {
-				if (tn == graph.getModel().getRoot()) {
+				if(tn == graph.getModel().getRoot()) {
 					return 0;
 				}
 				return graph.getGraphic(tn).getHeight();
 			}
 		};
 		final TreeLayout<ICell> treeLayout = new TreeLayout<>(layout, nodeExtentProvider, configuration);
-		treeLayout.getNodeBounds().entrySet().stream().filter(entry -> entry.getKey() != graph.getModel().getRoot())
-				.forEach(entry -> {
-					graph.getGraphic(entry.getKey()).setLayoutX(entry.getValue().getX());
-					graph.getGraphic(entry.getKey()).setLayoutY(entry.getValue().getY());
-				});
+		treeLayout.getNodeBounds().entrySet().stream().filter(entry -> entry.getKey() != graph.getModel().getRoot()).forEach(entry -> {
+			graph.getGraphic(entry.getKey()).setLayoutX(entry.getValue().getX());
+			graph.getGraphic(entry.getKey()).setLayoutY(entry.getValue().getY());
+		});
 	}
 
 	public void addRecursively(DefaultTreeForTreeLayout<ICell> layout, ICell node) {
 		node.getCellChildren().forEach(cell -> {
-			layout.addChild(node, cell);
-			addRecursively(layout, cell);
+			if(!layout.hasNode(cell)) {
+				layout.addChild(node, cell);
+				addRecursively(layout, cell);
+			}
 		});
 	}
 

@@ -25,6 +25,8 @@ public class ZoomableScrollPane extends ScrollPane {
 		zoomGroup.getTransforms().add(scaleTransform);
 
 		zoomGroup.setOnScroll(new ZoomHandler());
+
+		setPannable(true);
 	}
 
 	public double getScaleValue() {
@@ -74,7 +76,7 @@ public class ZoomableScrollPane extends ScrollPane {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param minimizeOnly
 	 *            If the content fits already into the viewport, then we don't zoom
 	 *            if this parameter is true.
