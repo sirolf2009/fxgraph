@@ -7,7 +7,6 @@ import java.util.Map;
 import com.fxgraph.layout.Layout;
 
 import javafx.scene.Group;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 
@@ -53,9 +52,10 @@ public class Graph {
 
 		addEdges(getModel().getAllEdges());
 		addCells(getModel().getAllCells());
+
 	}
 
-	public ScrollPane getScrollPane() {
+	public ZoomableScrollPane getScrollPane() {
 		return this.scrollPane;
 	}
 
