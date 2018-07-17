@@ -47,7 +47,7 @@ public class Graph {
 		addCells(getModel().getAllCells());
 	}
 
-	public PannableCanvas getPannableCanvas() {
+	public PannableCanvas getCanvas() {
 		return pannableCanvas;
 	}
 
@@ -56,7 +56,7 @@ public class Graph {
 	}
 
 	public void beginUpdate() {
-		getPannableCanvas().getChildren().clear();
+		getCanvas().getChildren().clear();
 	}
 
 	public void endUpdate() {
@@ -65,20 +65,20 @@ public class Graph {
 		addCells(model.getAddedCells());
 
 		// remove components to graph pane
-		model.getRemovedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getPannableCanvas().getChildren().remove(cellGraphic));
-		model.getRemovedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getPannableCanvas().getChildren().remove(edgeGraphic));
+		model.getRemovedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getCanvas().getChildren().remove(cellGraphic));
+		model.getRemovedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCanvas().getChildren().remove(edgeGraphic));
 
 		// clean up the model
 		getModel().endUpdate();
 	}
 
 	private void addEdges(List<IEdge> edges) {
-		edges.stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getPannableCanvas().getChildren().add(edgeGraphic));
+		edges.stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCanvas().getChildren().add(edgeGraphic));
 	}
 
 	private void addCells(List<ICell> cells) {
 		cells.stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> {
-			getPannableCanvas().getChildren().add(cellGraphic);
+			getCanvas().getChildren().add(cellGraphic);
 			nodeGestures.makeDraggable(cellGraphic);
 		});
 	}
@@ -91,7 +91,7 @@ public class Graph {
 	}
 
 	public double getScale() {
-		return getPannableCanvas().getScale();
+		return getCanvas().getScale();
 	}
 
 	public void layout(Layout layout) {
