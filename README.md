@@ -64,7 +64,5 @@ graph.layout(new RandomLayout());
 ``` 
 
 ## TODO
- - better support for custom cells/edges
- - easy to serialize data structure
  - unit tests
  - better layouts

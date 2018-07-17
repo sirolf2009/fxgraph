@@ -6,28 +6,16 @@ import java.util.Map;
 
 import com.fxgraph.layout.Layout;
 
-import javafx.scene.Group;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
 
 public class Graph {
 
 	private final Model model;
-
-	private final Group canvas;
-
-	private final ZoomableScrollPane scrollPane;
-
+	private final PannableCanvas pannableCanvas;
 	private final Map<IGraphNode, Region> graphics;
-
-	MouseGestures mouseGestures;
-
-	/**
-	 * the pane wrapper is necessary or else the scrollpane would always align the
-	 * top-most and left-most child to the top and left eg when you drag the top
-	 * child down, the entire scrollpane would move down
-	 */
-	CellLayer cellLayer;
+	private final NodeGestures nodeGestures;
 
 	public Graph() {
 		this(new Model());
@@ -36,31 +24,31 @@ public class Graph {
 	public Graph(Model model) {
 		this.model = model;
 
-		canvas = new Group();
-		cellLayer = new CellLayer();
+		nodeGestures = new NodeGestures(this);
 
-		canvas.getChildren().add(cellLayer);
-
-		mouseGestures = new MouseGestures(this);
-
-		scrollPane = new ZoomableScrollPane(canvas);
+		pannableCanvas = new PannableCanvas();
+		final ViewportGestures sceneGestures = new ViewportGestures(pannableCanvas);
+		pannableCanvas.parentProperty().addListener((obs, oldVal, newVal) -> {
+			if(oldVal != null) {
+				oldVal.removeEventFilter(MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
+				oldVal.removeEventFilter(MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
+				oldVal.removeEventFilter(ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+			}
+			if(newVal != null) {
+				newVal.addEventFilter(MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
+				newVal.addEventFilter(MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
+				newVal.addEventFilter(ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+			}
+		});
 
 		graphics = new HashMap<>();
 
-		scrollPane.setFitToWidth(true);
-		scrollPane.setFitToHeight(true);
-
 		addEdges(getModel().getAllEdges());
 		addCells(getModel().getAllCells());
-
 	}
 
-	public ZoomableScrollPane getScrollPane() {
-		return this.scrollPane;
-	}
-
-	public Pane getCellLayer() {
-		return this.cellLayer;
+	public PannableCanvas getPannableCanvas() {
+		return pannableCanvas;
 	}
 
 	public Model getModel() {
@@ -68,7 +56,7 @@ public class Graph {
 	}
 
 	public void beginUpdate() {
-		getCellLayer().getChildren().clear();
+		getPannableCanvas().getChildren().clear();
 	}
 
 	public void endUpdate() {
@@ -77,37 +65,33 @@ public class Graph {
 		addCells(model.getAddedCells());
 
 		// remove components to graph pane
-		model.getRemovedCells().stream().map(cell -> getGraphic(cell))
-		.forEach(cellGraphic -> getCellLayer().getChildren().remove(cellGraphic));
-		model.getRemovedEdges().stream().map(edge -> getGraphic(edge))
-		.forEach(edgeGraphic -> getCellLayer().getChildren().remove(edgeGraphic));
+		model.getRemovedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getPannableCanvas().getChildren().remove(cellGraphic));
+		model.getRemovedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getPannableCanvas().getChildren().remove(edgeGraphic));
 
 		// clean up the model
 		getModel().endUpdate();
-
 	}
 
 	private void addEdges(List<IEdge> edges) {
-		edges.stream().map(edge -> getGraphic(edge))
-		.forEach(edgeGraphic -> getCellLayer().getChildren().add(edgeGraphic));
+		edges.stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getPannableCanvas().getChildren().add(edgeGraphic));
 	}
 
 	private void addCells(List<ICell> cells) {
 		cells.stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> {
-			getCellLayer().getChildren().add(cellGraphic);
-			mouseGestures.makeDraggable(cellGraphic);
+			getPannableCanvas().getChildren().add(cellGraphic);
+			nodeGestures.makeDraggable(cellGraphic);
 		});
 	}
 
 	public Region getGraphic(IGraphNode node) {
-		if (!graphics.containsKey(node)) {
+		if(!graphics.containsKey(node)) {
 			graphics.put(node, node.getGraphic(this));
 		}
 		return graphics.get(node);
 	}
 
 	public double getScale() {
-		return this.scrollPane.getScaleValue();
+		return getPannableCanvas().getScale();
 	}
 
 	public void layout(Layout layout) {

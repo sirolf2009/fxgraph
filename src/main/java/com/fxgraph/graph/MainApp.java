@@ -21,7 +21,7 @@ public class MainApp extends Application {
 
 		graph = new Graph();
 
-		root.setCenter(graph.getScrollPane());
+		root.setCenter(graph.getPannableCanvas());
 
 		final Scene scene = new Scene(root, 1024, 768);
 		scene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());

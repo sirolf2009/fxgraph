@@ -4,44 +4,38 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 
-public class MouseGestures {
+public class NodeGestures {
 
 	final DragContext dragContext = new DragContext();
+	final Graph graph;
 
-	Graph graph;
-
-	public MouseGestures(Graph graph) {
+	public NodeGestures(Graph graph) {
 		this.graph = graph;
 	}
 
 	public void makeDraggable(final Node node) {
-
 		node.setOnMousePressed(onMousePressedEventHandler);
 		node.setOnMouseDragged(onMouseDraggedEventHandler);
 		node.setOnMouseReleased(onMouseReleasedEventHandler);
-
 	}
 
-	EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
+	final EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
 
 		@Override
 		public void handle(MouseEvent event) {
-
 			final Node node = (Node) event.getSource();
 
 			final double scale = graph.getScale();
 
 			dragContext.x = node.getBoundsInParent().getMinX() * scale - event.getScreenX();
 			dragContext.y = node.getBoundsInParent().getMinY() * scale - event.getScreenY();
-
 		}
 	};
 
-	EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
+	final EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
 
 		@Override
 		public void handle(MouseEvent event) {
-
 			final Node node = (Node) event.getSource();
 
 			double offsetX = event.getScreenX() + dragContext.x;
@@ -54,11 +48,10 @@ public class MouseGestures {
 			offsetY /= scale;
 
 			node.relocate(offsetX, offsetY);
-
 		}
 	};
 
-	EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
+	final EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
 
 		@Override
 		public void handle(MouseEvent event) {
@@ -66,10 +59,8 @@ public class MouseGestures {
 		}
 	};
 
-	class DragContext {
-
+	public static class DragContext {
 		double x;
 		double y;
-
 	}
 }
