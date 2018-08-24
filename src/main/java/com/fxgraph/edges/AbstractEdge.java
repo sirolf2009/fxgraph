@@ -12,8 +12,8 @@ public abstract class AbstractEdge implements IEdge {
 		this.source = source;
 		this.target = target;
 
-		source.addCellChild(target);
-		target.addCellParent(source);
+		source.addCellParent(target);
+		target.addCellChild(source);
 	}
 
 	@Override

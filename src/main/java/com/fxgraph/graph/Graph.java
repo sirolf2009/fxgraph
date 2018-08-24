@@ -73,7 +73,13 @@ public class Graph {
 	}
 
 	private void addEdges(List<IEdge> edges) {
-		edges.stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCanvas().getChildren().add(edgeGraphic));
+		edges.stream().map(edge -> {
+			try {
+				return getGraphic(edge);
+			} catch(final Exception e) {
+				throw new RuntimeException("failed to get graphic for " + edge, e);
+			}
+		}).forEach(edgeGraphic -> getCanvas().getChildren().add(edgeGraphic));
 	}
 
 	private void addCells(List<ICell> cells) {

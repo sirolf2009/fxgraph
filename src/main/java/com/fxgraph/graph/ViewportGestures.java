@@ -88,11 +88,23 @@ public class ViewportGestures {
 			}
 
 			scale = clamp(scale, MIN_SCALE, MAX_SCALE);
-
 			final double f = (scale / oldScale) - 1;
 
-			final double dx = (event.getSceneX() - (canvas.getBoundsInParent().getWidth() / 2 + canvas.getBoundsInParent().getMinX()));
-			final double dy = (event.getSceneY() - (canvas.getBoundsInParent().getHeight() / 2 + canvas.getBoundsInParent().getMinY()));
+			// maxX = right overhang, maxY = lower overhang
+			final double maxX = canvas.getBoundsInParent().getMaxX() - canvas.localToParent(canvas.getPrefWidth(), canvas.getPrefHeight()).getX();
+			final double maxY = canvas.getBoundsInParent().getMaxY() - canvas.localToParent(canvas.getPrefWidth(), canvas.getPrefHeight()).getY();
+
+			// minX = left overhang, minY = upper overhang
+			final double minX = canvas.localToParent(0, 0).getX() - canvas.getBoundsInParent().getMinX();
+			final double minY = canvas.localToParent(0, 0).getY() - canvas.getBoundsInParent().getMinY();
+
+			// adding the overhangs together, as we only consider the width of canvas itself
+			final double subX = maxX + minX;
+			final double subY = maxY + minY;
+
+			// subtracting the overall overhang from the width and only the left and upper overhang from the upper left point
+			final double dx = (event.getSceneX() - ((canvas.getBoundsInParent().getWidth() - subX) / 2 + (canvas.getBoundsInParent().getMinX() + minX)));
+			final double dy = (event.getSceneY() - ((canvas.getBoundsInParent().getHeight() - subY) / 2 + (canvas.getBoundsInParent().getMinY() + minY)));
 
 			canvas.setScale(scale);
 
