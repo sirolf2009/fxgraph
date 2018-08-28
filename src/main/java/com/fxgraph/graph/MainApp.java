@@ -1,12 +1,17 @@
 package com.fxgraph.graph;
 
+import org.abego.treelayout.Configuration.Location;
+
 import com.fxgraph.cells.RectangleCell;
 import com.fxgraph.cells.TriangleCell;
+import com.fxgraph.edges.CorneredEdge;
+import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.layout.AbegoTreeLayout;
 import com.fxgraph.layout.RandomLayout;
 
 import javafx.application.Application;
+import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -30,7 +35,7 @@ public class MainApp extends Application {
 		primaryStage.show();
 
 		addTreeComponents();
-		graph.layout(new AbegoTreeLayout());
+		graph.layout(new AbegoTreeLayout(200, 200, Location.Top));
 	}
 
 	@SuppressWarnings("unused")
@@ -95,10 +100,16 @@ public class MainApp extends Application {
 		model.addCell(cellF);
 		model.addCell(cellG);
 
-		model.addEdge(cellA, cellB);
-		model.addEdge(cellA, cellC);
+		final Edge edgeAB = new Edge(cellA, cellB);
+		edgeAB.textProperty().set("Edges can have text too!");
+		model.addEdge(edgeAB);
+		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, Orientation.HORIZONTAL);
+		edgeAC.textProperty().set("Edges can have corners too!");
+		model.addEdge(edgeAC);
 		model.addEdge(cellB, cellD);
-		model.addEdge(cellB, cellE);
+		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, Orientation.HORIZONTAL);
+		edgeBE.textProperty().set("You can implement custom edges and nodes too!");
+		model.addEdge(edgeBE);
 		model.addEdge(cellC, cellF);
 		model.addEdge(cellC, cellG);
 
