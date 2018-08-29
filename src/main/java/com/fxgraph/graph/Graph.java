@@ -16,6 +16,7 @@ public class Graph {
 	private final PannableCanvas pannableCanvas;
 	private final Map<IGraphNode, Region> graphics;
 	private final NodeGestures nodeGestures;
+	private final ViewportGestures viewportGestures;
 
 	public Graph() {
 		this(new Model());
@@ -27,17 +28,17 @@ public class Graph {
 		nodeGestures = new NodeGestures(this);
 
 		pannableCanvas = new PannableCanvas();
-		final ViewportGestures sceneGestures = new ViewportGestures(pannableCanvas);
+		viewportGestures = new ViewportGestures(pannableCanvas);
 		pannableCanvas.parentProperty().addListener((obs, oldVal, newVal) -> {
 			if(oldVal != null) {
-				oldVal.removeEventFilter(MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
-				oldVal.removeEventFilter(MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
-				oldVal.removeEventFilter(ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+				oldVal.removeEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				oldVal.removeEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				oldVal.removeEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 			if(newVal != null) {
-				newVal.addEventFilter(MouseEvent.MOUSE_PRESSED, sceneGestures.getOnMousePressedEventHandler());
-				newVal.addEventFilter(MouseEvent.MOUSE_DRAGGED, sceneGestures.getOnMouseDraggedEventHandler());
-				newVal.addEventFilter(ScrollEvent.ANY, sceneGestures.getOnScrollEventHandler());
+				newVal.addEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				newVal.addEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				newVal.addEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 		});
 
@@ -102,5 +103,13 @@ public class Graph {
 
 	public void layout(Layout layout) {
 		layout.execute(this);
+	}
+
+	public NodeGestures getNodeGestures() {
+		return nodeGestures;
+	}
+
+	public ViewportGestures getViewportGestures() {
+		return viewportGestures;
 	}
 }
