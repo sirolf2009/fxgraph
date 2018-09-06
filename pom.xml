@@ -29,7 +29,7 @@
 	<url>https://github.com/sirolf2009/fxgraph</url>
 
 	<packaging>jar</packaging>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 
 	<organization>
 		<!-- Used as the 'Vendor' for JNLP generation -->
