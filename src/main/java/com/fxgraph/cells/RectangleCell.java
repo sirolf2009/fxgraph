@@ -23,7 +23,7 @@ public class RectangleCell extends AbstractCell {
 		pane.setPrefSize(50, 50);
 		view.widthProperty().bind(pane.prefWidthProperty());
 		view.heightProperty().bind(pane.prefHeightProperty());
-		Cells.makeResizable(pane);
+		CellGestures.makeResizable(pane);
 
 		return pane;
 	}

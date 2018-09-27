@@ -24,11 +24,12 @@ public class TriangleCell extends AbstractCell {
 		view.setFill(Color.RED);
 
 		final Pane pane = new Pane(view);
+		pane.setPrefSize(50, 50);
 		final Scale scale = new Scale(1, 1);
 		view.getTransforms().add(scale);
 		scale.xProperty().bind(pane.widthProperty().divide(50));
 		scale.yProperty().bind(pane.heightProperty().divide(50));
-		Cells.makeResizable(pane);
+		CellGestures.makeResizable(pane);
 
 		return pane;
 	}
