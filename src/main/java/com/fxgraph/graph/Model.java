@@ -86,6 +86,9 @@ public class Model implements Serializable {
 	}
 
 	public void addCell(ICell cell) {
+		if(cell == null) {
+			throw new NullPointerException("Cannot add a null cell");
+		}
 		addedCells.add(cell);
 	}
 
@@ -95,6 +98,9 @@ public class Model implements Serializable {
 	}
 
 	public void addEdge(IEdge edge) {
+		if(edge == null) {
+			throw new NullPointerException("Cannot add a null edge");
+		}
 		addedEdges.add(edge);
 	}
 

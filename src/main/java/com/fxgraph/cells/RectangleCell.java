@@ -9,10 +9,7 @@ import javafx.scene.shape.Rectangle;
 
 public class RectangleCell extends AbstractCell {
 
-	private final String text;
-
-	public RectangleCell(String text) {
-		this.text = text;
+	public RectangleCell() {
 	}
 
 	@Override
@@ -21,16 +18,14 @@ public class RectangleCell extends AbstractCell {
 
 		view.setStroke(Color.DODGERBLUE);
 		view.setFill(Color.DODGERBLUE);
-		return new Pane(view);
-	}
 
-	public String getText() {
-		return text;
-	}
+		final Pane pane = new Pane(view);
+		pane.setPrefSize(50, 50);
+		view.widthProperty().bind(pane.prefWidthProperty());
+		view.heightProperty().bind(pane.prefHeightProperty());
+		Cells.makeResizable(pane);
 
-	@Override
-	public String toString() {
-		return text;
+		return pane;
 	}
 
 }

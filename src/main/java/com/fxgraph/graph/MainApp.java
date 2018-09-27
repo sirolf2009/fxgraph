@@ -45,13 +45,13 @@ public class MainApp extends Application {
 
 		graph.beginUpdate();
 
-		final ICell cellA = new RectangleCell("");
-		final ICell cellB = new RectangleCell("");
-		final ICell cellC = new RectangleCell("");
-		final ICell cellD = new TriangleCell("");
-		final ICell cellE = new TriangleCell("");
-		final ICell cellF = new RectangleCell("");
-		final ICell cellG = new RectangleCell("");
+		final ICell cellA = new RectangleCell();
+		final ICell cellB = new RectangleCell();
+		final ICell cellC = new RectangleCell();
+		final ICell cellD = new TriangleCell();
+		final ICell cellE = new TriangleCell();
+		final ICell cellF = new RectangleCell();
+		final ICell cellG = new RectangleCell();
 
 		model.addCell(cellA);
 		model.addCell(cellB);
@@ -84,13 +84,13 @@ public class MainApp extends Application {
 
 		graph.beginUpdate();
 
-		final ICell cellA = new RectangleCell("cellA");
-		final ICell cellB = new RectangleCell("cellB");
-		final ICell cellC = new RectangleCell("cellC");
-		final ICell cellD = new TriangleCell("cellD");
-		final ICell cellE = new TriangleCell("cellE");
-		final ICell cellF = new RectangleCell("cellF");
-		final ICell cellG = new RectangleCell("cellG");
+		final ICell cellA = new RectangleCell();
+		final ICell cellB = new RectangleCell();
+		final ICell cellC = new RectangleCell();
+		final ICell cellD = new TriangleCell();
+		final ICell cellE = new TriangleCell();
+		final ICell cellF = new RectangleCell();
+		final ICell cellG = new RectangleCell();
 
 		model.addCell(cellA);
 		model.addCell(cellB);

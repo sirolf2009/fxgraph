@@ -91,10 +91,15 @@ public class Graph {
 	}
 
 	public Region getGraphic(IGraphNode node) {
-		if(!graphics.containsKey(node)) {
-			graphics.put(node, node.getGraphic(this));
+		try {
+			if(!graphics.containsKey(node)) {
+				graphics.put(node, node.getGraphic(this));
+			}
+			return graphics.get(node);
+		} catch(final Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
-		return graphics.get(node);
 	}
 
 	public double getScale() {

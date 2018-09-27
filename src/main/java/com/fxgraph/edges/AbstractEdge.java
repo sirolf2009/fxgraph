@@ -12,6 +12,13 @@ public abstract class AbstractEdge implements IEdge {
 		this.source = source;
 		this.target = target;
 
+		if(source == null) {
+			throw new NullPointerException("Source cannot be null");
+		}
+		if(target == null) {
+			throw new NullPointerException("Target cannot be null");
+		}
+
 		source.addCellParent(target);
 		target.addCellChild(source);
 	}
