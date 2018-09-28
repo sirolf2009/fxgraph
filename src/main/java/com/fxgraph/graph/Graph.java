@@ -93,13 +93,17 @@ public class Graph {
 	public Region getGraphic(IGraphNode node) {
 		try {
 			if(!graphics.containsKey(node)) {
-				graphics.put(node, node.getGraphic(this));
+				createGraphic(node);
 			}
 			return graphics.get(node);
 		} catch(final Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public Region createGraphic(IGraphNode node) {
+		return graphics.put(node, node.getGraphic(this));
 	}
 
 	public double getScale() {
