@@ -1,12 +1,13 @@
 package com.fxgraph.graph;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.edges.Edge;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
 
 public class Model implements Serializable {
@@ -15,13 +16,13 @@ public class Model implements Serializable {
 
 	private final ICell root;
 
-	private List<ICell> allCells;
-	private transient List<ICell> addedCells;
-	private transient List<ICell> removedCells;
+	private ObservableList<ICell> allCells;
+	private transient ObservableList<ICell> addedCells;
+	private transient ObservableList<ICell> removedCells;
 
-	private List<IEdge> allEdges;
-	private transient List<IEdge> addedEdges;
-	private transient List<IEdge> removedEdges;
+	private ObservableList<IEdge> allEdges;
+	private transient ObservableList<IEdge> addedEdges;
+	private transient ObservableList<IEdge> removedEdges;
 
 	public Model() {
 		root = new AbstractCell() {
@@ -35,13 +36,13 @@ public class Model implements Serializable {
 	}
 
 	public void clear() {
-		allCells = new ArrayList<>();
-		addedCells = new ArrayList<>();
-		removedCells = new ArrayList<>();
+		allCells = FXCollections.observableArrayList();
+		addedCells = FXCollections.observableArrayList();
+		removedCells = FXCollections.observableArrayList();
 
-		allEdges = new ArrayList<>();
-		addedEdges = new ArrayList<>();
-		removedEdges = new ArrayList<>();
+		allEdges = FXCollections.observableArrayList();
+		addedEdges = FXCollections.observableArrayList();
+		removedEdges = FXCollections.observableArrayList();
 	}
 
 	public void clearAddedLists() {
@@ -61,27 +62,27 @@ public class Model implements Serializable {
 		merge();
 	}
 
-	public List<ICell> getAddedCells() {
+	public ObservableList<ICell> getAddedCells() {
 		return addedCells;
 	}
 
-	public List<ICell> getRemovedCells() {
+	public ObservableList<ICell> getRemovedCells() {
 		return removedCells;
 	}
 
-	public List<ICell> getAllCells() {
+	public ObservableList<ICell> getAllCells() {
 		return allCells;
 	}
 
-	public List<IEdge> getAddedEdges() {
+	public ObservableList<IEdge> getAddedEdges() {
 		return addedEdges;
 	}
 
-	public List<IEdge> getRemovedEdges() {
+	public ObservableList<IEdge> getRemovedEdges() {
 		return removedEdges;
 	}
 
-	public List<IEdge> getAllEdges() {
+	public ObservableList<IEdge> getAllEdges() {
 		return allEdges;
 	}
 
@@ -110,8 +111,8 @@ public class Model implements Serializable {
 	 * @param cellList
 	 */
 	public void attachOrphansToGraphParent(List<ICell> cellList) {
-		for (final ICell cell : cellList) {
-			if (cell.getCellParents().size() == 0) {
+		for(final ICell cell : cellList) {
+			if(cell.getCellParents().size() == 0) {
 				root.addCellChild(cell);
 			}
 		}
@@ -123,7 +124,7 @@ public class Model implements Serializable {
 	 * @param cellList
 	 */
 	public void disconnectFromGraphParent(List<ICell> cellList) {
-		for (final ICell cell : cellList) {
+		for(final ICell cell : cellList) {
 			root.removeCellChild(cell);
 		}
 	}
