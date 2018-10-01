@@ -6,6 +6,9 @@ import java.util.Map;
 
 import com.fxgraph.layout.Layout;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
@@ -17,6 +20,8 @@ public class Graph {
 	private final Map<IGraphNode, Region> graphics;
 	private final NodeGestures nodeGestures;
 	private final ViewportGestures viewportGestures;
+	private final BooleanProperty useNodeGestures;
+	private final BooleanProperty useViewportGestures;
 
 	public Graph() {
 		this(new Model());
@@ -26,9 +31,33 @@ public class Graph {
 		this.model = model;
 
 		nodeGestures = new NodeGestures(this);
+		useNodeGestures = new SimpleBooleanProperty(true);
+		useNodeGestures.addListener((obs, oldVal, newVal) -> {
+			if(newVal) {
+				model.getAllCells().forEach(cell -> nodeGestures.makeDraggable(getGraphic(cell)));
+			} else {
+				model.getAllCells().forEach(cell -> nodeGestures.makeUndraggable(getGraphic(cell)));
+			}
+		});
 
 		pannableCanvas = new PannableCanvas();
 		viewportGestures = new ViewportGestures(pannableCanvas);
+		useViewportGestures = new SimpleBooleanProperty(true);
+		useViewportGestures.addListener((obs, oldVal, newVal) -> {
+			final Parent parent = pannableCanvas.parentProperty().get();
+			if(parent == null) {
+				return;
+			}
+			if(newVal) {
+				parent.addEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				parent.addEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.addEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+			} else {
+				parent.removeEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				parent.removeEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.removeEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+			}
+		});
 		pannableCanvas.parentProperty().addListener((obs, oldVal, newVal) -> {
 			if(oldVal != null) {
 				oldVal.removeEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
@@ -86,7 +115,9 @@ public class Graph {
 	private void addCells(List<ICell> cells) {
 		cells.stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> {
 			getCanvas().getChildren().add(cellGraphic);
-			nodeGestures.makeDraggable(cellGraphic);
+			if(useNodeGestures.get()) {
+				nodeGestures.makeDraggable(cellGraphic);
+			}
 		});
 	}
 
@@ -118,7 +149,15 @@ public class Graph {
 		return nodeGestures;
 	}
 
+	public BooleanProperty getUseNodeGestures() {
+		return useNodeGestures;
+	}
+
 	public ViewportGestures getViewportGestures() {
 		return viewportGestures;
+	}
+
+	public BooleanProperty getUseViewportGestures() {
+		return useViewportGestures;
 	}
 }

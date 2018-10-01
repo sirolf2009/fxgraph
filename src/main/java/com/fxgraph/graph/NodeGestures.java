@@ -19,6 +19,12 @@ public class NodeGestures {
 		node.setOnMouseReleased(onMouseReleasedEventHandler);
 	}
 
+	public void makeUndraggable(final Node node) {
+		node.setOnMousePressed(null);
+		node.setOnMouseDragged(null);
+		node.setOnMouseReleased(null);
+	}
+
 	final EventHandler<MouseEvent> onMousePressedEventHandler = new EventHandler<MouseEvent>() {
 
 		@Override
