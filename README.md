@@ -5,6 +5,7 @@ You can find the original question here: https://stackoverflow.com/questions/306
 
 ## Features
  - Draggable nodes
+ - Resizable nodes
  - Zooming / Panning
  - Custom nodes and edges
  - Random layout
@@ -19,25 +20,24 @@ You can get it from maven central
 <dependency>
 	<groupId>com.sirolf2009</groupId>
 	<artifactId>fxgraph</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.3</version>
 </dependency>
 ``` 
 
 ## Usage
 You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code for the screenshot above is as follows
 ```java
-Graph graph = new Graph();
-Model model = graph.getModel();
+Graph graph = new Graph();final Model model = graph.getModel();
 
 graph.beginUpdate();
 
-final ICell cellA = new RectangleCell("cellA");
-final ICell cellB = new RectangleCell("cellB");
-final ICell cellC = new RectangleCell("cellC");
-final ICell cellD = new TriangleCell("cellD");
-final ICell cellE = new TriangleCell("cellE");
-final ICell cellF = new RectangleCell("cellF");
-final ICell cellG = new RectangleCell("cellG");
+final ICell cellA = new RectangleCell();
+final ICell cellB = new RectangleCell();
+final ICell cellC = new RectangleCell();
+final ICell cellD = new TriangleCell();
+final ICell cellE = new TriangleCell();
+final ICell cellF = new RectangleCell();
+final ICell cellG = new RectangleCell();
 
 model.addCell(cellA);
 model.addCell(cellB);
