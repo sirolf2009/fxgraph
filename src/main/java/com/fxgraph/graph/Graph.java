@@ -49,25 +49,25 @@ public class Graph {
 				return;
 			}
 			if(newVal) {
-				parent.addEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
-				parent.addEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
-				parent.addEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+				parent.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				parent.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			} else {
-				parent.removeEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
-				parent.removeEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
-				parent.removeEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+				parent.removeEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				parent.removeEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.removeEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 		});
 		pannableCanvas.parentProperty().addListener((obs, oldVal, newVal) -> {
 			if(oldVal != null) {
-				oldVal.removeEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
-				oldVal.removeEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
-				oldVal.removeEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+				oldVal.removeEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				oldVal.removeEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				oldVal.removeEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 			if(newVal != null) {
-				newVal.addEventFilter(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
-				newVal.addEventFilter(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
-				newVal.addEventFilter(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
+				newVal.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
+				newVal.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				newVal.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 		});
 
