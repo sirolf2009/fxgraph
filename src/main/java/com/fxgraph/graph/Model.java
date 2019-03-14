@@ -92,6 +92,13 @@ public class Model implements Serializable {
 		}
 		addedCells.add(cell);
 	}
+	
+	public void removeCell(ICell cell) {
+		if(cell == null) {
+			throw new NullPointerException("Cannot remove a null cell");
+		}
+		removedCells.add(cell);
+	}
 
 	public void addEdge(ICell sourceCell, ICell targetCell) {
 		final IEdge edge = new Edge(sourceCell, targetCell);
@@ -103,6 +110,13 @@ public class Model implements Serializable {
 			throw new NullPointerException("Cannot add a null edge");
 		}
 		addedEdges.add(edge);
+	}
+	
+	public void removeEdge(IEdge edge) {
+		if(edge == null) {
+			throw new NullPointerException("Cannot remove a null edge");
+		}
+		removedEdges.add(edge);
 	}
 
 	/**
