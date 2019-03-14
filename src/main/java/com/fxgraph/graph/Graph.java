@@ -33,7 +33,7 @@ public class Graph {
 		nodeGestures = new NodeGestures(this);
 		useNodeGestures = new SimpleBooleanProperty(true);
 		useNodeGestures.addListener((obs, oldVal, newVal) -> {
-			if(newVal) {
+			if (newVal) {
 				model.getAllCells().forEach(cell -> nodeGestures.makeDraggable(getGraphic(cell)));
 			} else {
 				model.getAllCells().forEach(cell -> nodeGestures.makeUndraggable(getGraphic(cell)));
@@ -45,10 +45,10 @@ public class Graph {
 		useViewportGestures = new SimpleBooleanProperty(true);
 		useViewportGestures.addListener((obs, oldVal, newVal) -> {
 			final Parent parent = pannableCanvas.parentProperty().get();
-			if(parent == null) {
+			if (parent == null) {
 				return;
 			}
-			if(newVal) {
+			if (newVal) {
 				parent.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				parent.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
 				parent.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
@@ -59,12 +59,12 @@ public class Graph {
 			}
 		});
 		pannableCanvas.parentProperty().addListener((obs, oldVal, newVal) -> {
-			if(oldVal != null) {
+			if (oldVal != null) {
 				oldVal.removeEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				oldVal.removeEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
 				oldVal.removeEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
-			if(newVal != null) {
+			if (newVal != null) {
 				newVal.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				newVal.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
 				newVal.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
@@ -95,39 +95,71 @@ public class Graph {
 		addCells(model.getAddedCells());
 
 		// remove components to graph pane
-		model.getRemovedCells().stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> getCanvas().getChildren().remove(cellGraphic));
-		model.getRemovedEdges().stream().map(edge -> getGraphic(edge)).forEach(edgeGraphic -> getCanvas().getChildren().remove(edgeGraphic));
+		removeEdges(model.getRemovedEdges());
+		removeCells(model.getRemovedCells());
 
 		// clean up the model
 		getModel().endUpdate();
 	}
 
 	private void addEdges(List<IEdge> edges) {
-		edges.stream().map(edge -> {
+		edges.forEach(edge -> {
 			try {
-				return getGraphic(edge);
-			} catch(final Exception e) {
-				throw new RuntimeException("failed to get graphic for " + edge, e);
+				Region edgeGraphic = getGraphic(edge);
+				getCanvas().getChildren().add(edgeGraphic);
+				edge.onAddedToGraph(this, edgeGraphic);
+			} catch (final Exception e) {
+				throw new RuntimeException("failed to add " + edge, e);
 			}
-		}).forEach(edgeGraphic -> getCanvas().getChildren().add(edgeGraphic));
+		});
+	}
+
+	private void removeEdges(List<IEdge> edges) {
+		edges.forEach(edge -> {
+			try {
+				Region edgeGraphic = getGraphic(edge);
+				getCanvas().getChildren().remove(edgeGraphic);
+				edge.onRemovedFromGraph(this, edgeGraphic);
+			} catch (final Exception e) {
+				throw new RuntimeException("failed to remove " + edge, e);
+			}
+		});
 	}
 
 	private void addCells(List<ICell> cells) {
-		cells.stream().map(cell -> getGraphic(cell)).forEach(cellGraphic -> {
-			getCanvas().getChildren().add(cellGraphic);
-			if(useNodeGestures.get()) {
-				nodeGestures.makeDraggable(cellGraphic);
+		cells.forEach(cell -> {
+			try {
+				Region cellGraphic = getGraphic(cell);
+				getCanvas().getChildren().add(cellGraphic);
+				if (useNodeGestures.get()) {
+					nodeGestures.makeDraggable(cellGraphic);
+				}
+				cell.onAddedToGraph(this, cellGraphic);
+			} catch (final Exception e) {
+				throw new RuntimeException("failed to add " + cell, e);
+			}
+		});
+	}
+
+	private void removeCells(List<ICell> cells) {
+		cells.forEach(cell -> {
+			try {
+				Region cellGraphic = getGraphic(cell);
+				getCanvas().getChildren().remove(cellGraphic);
+				cell.onRemovedFromGraph(this, cellGraphic);
+			} catch (final Exception e) {
+				throw new RuntimeException("failed to remove " + cell, e);
 			}
 		});
 	}
 
 	public Region getGraphic(IGraphNode node) {
 		try {
-			if(!graphics.containsKey(node)) {
+			if (!graphics.containsKey(node)) {
 				graphics.put(node, createGraphic(node));
 			}
 			return graphics.get(node);
-		} catch(final Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			throw e;
 		}
