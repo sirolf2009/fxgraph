@@ -19,27 +19,27 @@ import javafx.scene.text.Text;
 
 public class SequenceDiagram extends Graph {
 
-	private static final int verticalSpacing = 200;
-	private static final int horizontalSpacing = 50;
+	private int verticalSpacing = 200;
+	private int horizontalSpacing = 50;
 	
-	List<ActorCell> actors = new ArrayList<>();
-	List<MessageEdge> messages = new ArrayList<>();
+	List<IActorCell> actors = new ArrayList<>();
+	List<IMessageEdge> messages = new ArrayList<>();
 	
 	public void addActor(String actor, double length) {
 		addActor(new ActorCell(actor, new SimpleDoubleProperty(length)));
 	}
 	
-	public void addActor(ActorCell actor) {
+	public void addActor(IActorCell actor) {
 		actors.add(actor);
 		getModel().addCell(actor);
 		endUpdate();
 	}
 
-	public void addMessage(ActorCell source, ActorCell target, String name, int index) {
-		addMessage(new MessageEdge(source, target, name, index));
+	public void addMessage(IActorCell source, IActorCell target, String name) {
+		addMessage(new MessageEdge(source, target, name));
 	}
 	
-	public void addMessage(MessageEdge edge) {
+	public void addMessage(IMessageEdge edge) {
 		messages.add(edge);
 		getModel().addEdge(edge);
 		endUpdate();
@@ -52,12 +52,35 @@ public class SequenceDiagram extends Graph {
 			getGraphic(actor).setLayoutY(0);
 		});
 		
-		messages.stream().sorted().forEach(edge -> {
-			edge.yOffsetProperty().set(edge.index * horizontalSpacing);
+		counter.set(0);
+		messages.forEach(edge -> {
+			edge.yOffsetProperty().set(counter.incrementAndGet() * horizontalSpacing);
 		});
 	}
 	
-	static class ActorCell extends AbstractCell {
+	public int getVerticalSpacing() {
+		return verticalSpacing;
+	}
+
+	public void setVerticalSpacing(int verticalSpacing) {
+		this.verticalSpacing = verticalSpacing;
+	}
+
+	public int getHorizontalSpacing() {
+		return horizontalSpacing;
+	}
+
+	public void setHorizontalSpacing(int horizontalSpacing) {
+		this.horizontalSpacing = horizontalSpacing;
+	}
+
+	public static interface IActorCell extends ICell {
+		
+		public String getName();
+		
+	}
+	
+	public static class ActorCell extends AbstractCell implements IActorCell {
 		
 		private final String name;
 		private final DoubleProperty lifeLineLength;
@@ -75,12 +98,15 @@ public class SequenceDiagram extends Graph {
 		public Region getGraphic(Graph graph) {
 			Label label = new Label(name);
 			Line lifeLine = new Line();
+			lifeLine.getStyleClass().add("life-line");
 			lifeLine.startXProperty().bind(label.widthProperty().divide(2));
 			lifeLine.setStartY(0);
 			lifeLine.endXProperty().bind(label.widthProperty().divide(2));
 			lifeLine.endYProperty().bind(lifeLineLength);
 			lifeLine.getStrokeDashArray().add(4d);
-			return new Pane(label, lifeLine);
+			Pane pane = new Pane(label, lifeLine);
+			pane.getStyleClass().add("actor-cell");
+			return pane;
 		}
 		
 		@Override
@@ -97,24 +123,33 @@ public class SequenceDiagram extends Graph {
 			return graphic.layoutYProperty().add(label.heightProperty().divide(2));
 		}
 		
+		public String getName() {
+			return name;
+		}
+		
 	}
 	
-	static class MessageEdge extends AbstractEdge implements Comparable<MessageEdge> {
+	public static interface IMessageEdge extends IEdge {
+		
+		public DoubleProperty yOffsetProperty();
+		
+	}
+	
+	public static class MessageEdge extends AbstractEdge implements IMessageEdge {
 		
 		private final String name;
-		private final int index;
 		private final DoubleProperty yOffsetProperty = new SimpleDoubleProperty();
 		
-		public MessageEdge(ActorCell source, ActorCell target, String name, int index) {
+		public MessageEdge(IActorCell source, IActorCell target, String name) {
 			super(source, target);
 			this.name = name;
-			this.index = index;
 		}
 
 		@Override
 		public Region getGraphic(Graph graph) {
 			Group group = new Group();
 			Arrow arrow = new Arrow();
+			arrow.getStyleClass().add("arrow");
 
 			final DoubleBinding sourceX = getSource().getXAnchor(graph, this);
 			final DoubleBinding sourceY = getSource().getYAnchor(graph, this).add(yOffsetProperty);
@@ -142,12 +177,9 @@ public class SequenceDiagram extends Graph {
 			text.parentProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
 			text.textProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
 			group.getChildren().add(text);
-			return new Pane(group);
-		}
-
-		@Override
-		public int compareTo(MessageEdge o) {
-			return Integer.valueOf(index).compareTo(o.index);
+			Pane pane = new Pane(group);
+			pane.getStyleClass().add("message-edge");
+			return pane;
 		}
 		
 		public DoubleProperty yOffsetProperty() {

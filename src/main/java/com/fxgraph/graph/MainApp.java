@@ -123,10 +123,10 @@ public class MainApp extends Application {
 		ActorCell actorC = new ActorCell("Actor C", 400d);
 		Arrays.asList(actorA, actorB, actorC).forEach(actor -> seqDiagram.addActor(actor));
 		
-		seqDiagram.addMessage(actorA, actorB, "checkEmail", 1);
-		seqDiagram.addMessage(actorB, actorC, "readSavedUser", 2);
-		seqDiagram.addMessage(actorC, actorB, "savedUser", 3);
-		seqDiagram.addMessage(actorB, actorA, "noNewEmails", 4);
+		seqDiagram.addMessage(actorA, actorB, "checkEmail");
+		seqDiagram.addMessage(actorB, actorC, "readSavedUser");
+		seqDiagram.addMessage(actorC, actorB, "savedUser");
+		seqDiagram.addMessage(actorB, actorA, "noNewEmails");
 		
 		seqDiagram.layout();
 	}
