@@ -1,5 +1,7 @@
 package com.fxgraph.graph;
 
+import java.util.Arrays;
+
 import org.abego.treelayout.Configuration.Location;
 
 import com.fxgraph.cells.RectangleCell;
@@ -7,42 +9,44 @@ import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.CorneredEdge;
 import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
+import com.fxgraph.graph.SequenceDiagram.ActorCell;
 import com.fxgraph.layout.AbegoTreeLayout;
 import com.fxgraph.layout.RandomLayout;
 
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-	Graph graph = new Graph();
 
 	@Override
 	public void start(Stage primaryStage) {
-		final BorderPane root = new BorderPane();
+		final SplitPane root = new SplitPane();
 
-		graph = new Graph();
+		Graph graph = new Graph();
+		addGraphComponents(graph);
+		root.getItems().add(graph.getCanvas());
 
-		root.setCenter(graph.getCanvas());
+		Graph tree = new Graph();
+		addTreeComponents(tree);
+		root.getItems().add(tree.getCanvas());
+		
+		SequenceDiagram seqDiagram = new SequenceDiagram();
+		addSequenceDiagramComponents(seqDiagram);
+		root.getItems().add(seqDiagram.getCanvas());
 
 		final Scene scene = new Scene(root, 1024, 768);
 		scene.getStylesheets().add(getClass().getResource("/application.css").toExternalForm());
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
-
-		addTreeComponents();
-		graph.layout(new AbegoTreeLayout(200, 200, Location.Top));
 	}
 
-	@SuppressWarnings("unused")
-	private void addGraphComponents() {
-
+	private void addGraphComponents(Graph graph) {
 		final Model model = graph.getModel();
-
 		graph.beginUpdate();
 
 		final ICell cellA = new RectangleCell();
@@ -73,15 +77,11 @@ public class MainApp extends Application {
 		model.addEdge(edge);
 
 		graph.endUpdate();
-
 		graph.layout(new RandomLayout());
 	}
 
-	@SuppressWarnings("unused")
-	private void addTreeComponents() {
-
+	private void addTreeComponents(Graph graph) {
 		final Model model = graph.getModel();
-
 		graph.beginUpdate();
 
 		final ICell cellA = new RectangleCell();
@@ -114,6 +114,21 @@ public class MainApp extends Application {
 		model.addEdge(cellC, cellG);
 
 		graph.endUpdate();
+		graph.layout(new AbegoTreeLayout(200, 200, Location.Top));
+	}
+	
+	private void addSequenceDiagramComponents(SequenceDiagram seqDiagram) {
+		ActorCell actorA = new ActorCell("Actor A", 400d);
+		ActorCell actorB = new ActorCell("Actor B", 400d);
+		ActorCell actorC = new ActorCell("Actor C", 400d);
+		Arrays.asList(actorA, actorB, actorC).forEach(actor -> seqDiagram.addActor(actor));
+		
+		seqDiagram.addMessage(actorA, actorB, "checkEmail", 1);
+		seqDiagram.addMessage(actorB, actorC, "readSavedUser", 2);
+		seqDiagram.addMessage(actorC, actorB, "savedUser", 3);
+		seqDiagram.addMessage(actorB, actorA, "noNewEmails", 4);
+		
+		seqDiagram.layout();
 	}
 
 	public static void main(String[] args) {
