@@ -10,6 +10,7 @@ You can find the original question here: https://stackoverflow.com/questions/306
  - Custom nodes and edges
  - Random layout
  - Tree layout
+ - Sequence Diagram
 
 ## Screenshot
 ![Screenshot](screenshot.png)
