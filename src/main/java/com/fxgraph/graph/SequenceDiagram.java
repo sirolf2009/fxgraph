@@ -19,11 +19,11 @@ import javafx.scene.text.Text;
 
 public class SequenceDiagram extends Graph {
 
-	private int verticalSpacing = 200;
-	private int horizontalSpacing = 50;
+	private double verticalSpacing = 200;
+	private double horizontalSpacing = 50;
 	
-	List<IActorCell> actors = new ArrayList<>();
-	List<IMessageEdge> messages = new ArrayList<>();
+	private List<IActorCell> actors = new ArrayList<>();
+	private List<IMessageEdge> messages = new ArrayList<>();
 	
 	public void addActor(String actor, double length) {
 		addActor(new ActorCell(actor, new SimpleDoubleProperty(length)));
@@ -47,9 +47,10 @@ public class SequenceDiagram extends Graph {
 	
 	public void layout() {
 		AtomicInteger counter = new AtomicInteger();
-		actors.forEach(actor -> {
-			getGraphic(actor).setLayoutX(counter.getAndIncrement()*verticalSpacing);
-			getGraphic(actor).setLayoutY(0);
+		actors.stream().map(actor -> getGraphic(actor)).forEach(actor -> {
+			actor.setLayoutX(counter.getAndIncrement()*verticalSpacing);
+			actor.setLayoutY(0);
+			actor.toFront();
 		});
 		
 		counter.set(0);
@@ -58,20 +59,28 @@ public class SequenceDiagram extends Graph {
 		});
 	}
 	
-	public int getVerticalSpacing() {
+	public double getVerticalSpacing() {
 		return verticalSpacing;
 	}
 
-	public void setVerticalSpacing(int verticalSpacing) {
+	public void setVerticalSpacing(double verticalSpacing) {
 		this.verticalSpacing = verticalSpacing;
 	}
 
-	public int getHorizontalSpacing() {
+	public double getHorizontalSpacing() {
 		return horizontalSpacing;
 	}
 
-	public void setHorizontalSpacing(int horizontalSpacing) {
+	public void setHorizontalSpacing(double horizontalSpacing) {
 		this.horizontalSpacing = horizontalSpacing;
+	}
+	
+	public List<IActorCell> getActors() {
+		return actors;
+	}
+	
+	public List<IMessageEdge> getMessages() {
+		return messages;
 	}
 
 	public static interface IActorCell extends ICell {

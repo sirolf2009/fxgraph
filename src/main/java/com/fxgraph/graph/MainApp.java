@@ -11,7 +11,6 @@ import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.SequenceDiagram.ActorCell;
 import com.fxgraph.layout.AbegoTreeLayout;
-import com.fxgraph.layout.RandomLayout;
 
 import javafx.application.Application;
 import javafx.geometry.Orientation;
@@ -21,14 +20,9 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-
 	@Override
 	public void start(Stage primaryStage) {
 		final SplitPane root = new SplitPane();
-
-		Graph graph = new Graph();
-		addGraphComponents(graph);
-		root.getItems().add(graph.getCanvas());
 
 		Graph tree = new Graph();
 		addTreeComponents(tree);
@@ -43,41 +37,6 @@ public class MainApp extends Application {
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
-	}
-
-	private void addGraphComponents(Graph graph) {
-		final Model model = graph.getModel();
-		graph.beginUpdate();
-
-		final ICell cellA = new RectangleCell();
-		final ICell cellB = new RectangleCell();
-		final ICell cellC = new RectangleCell();
-		final ICell cellD = new TriangleCell();
-		final ICell cellE = new TriangleCell();
-		final ICell cellF = new RectangleCell();
-		final ICell cellG = new RectangleCell();
-
-		model.addCell(cellA);
-		model.addCell(cellB);
-		model.addCell(cellC);
-		model.addCell(cellD);
-		model.addCell(cellE);
-		model.addCell(cellF);
-		model.addCell(cellG);
-
-		model.addEdge(cellA, cellB);
-		model.addEdge(cellA, cellC);
-		model.addEdge(cellB, cellC);
-		model.addEdge(cellC, cellD);
-		model.addEdge(cellB, cellE);
-		model.addEdge(cellD, cellF);
-
-		final Edge edge = new Edge(cellD, cellG);
-		edge.textProperty().set("Edges can have text too!");
-		model.addEdge(edge);
-
-		graph.endUpdate();
-		graph.layout(new RandomLayout());
 	}
 
 	private void addTreeComponents(Graph graph) {

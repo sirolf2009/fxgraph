@@ -25,9 +25,10 @@ You can get it from maven central
 ``` 
 
 ## Usage
-You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code for the screenshot above is as follows
+You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code for the graph in the screenshot above is as follows
 ```java
-Graph graph = new Graph();final Model model = graph.getModel();
+Graph graph = new Graph();
+final Model model = graph.getModel();
 
 graph.beginUpdate();
 
@@ -64,6 +65,22 @@ graph.endUpdate();
 
 graph.layout(new RandomLayout());
 ``` 
+Or for the sequence diagram
+```java
+SequenceDiagram seqDiagram = new SequenceDiagram();
+
+ActorCell actorA = new ActorCell("Actor A", 400d);
+ActorCell actorB = new ActorCell("Actor B", 400d);
+ActorCell actorC = new ActorCell("Actor C", 400d);
+Arrays.asList(actorA, actorB, actorC).forEach(actor -> seqDiagram.addActor(actor));
+
+seqDiagram.addMessage(actorA, actorB, "checkEmail");
+seqDiagram.addMessage(actorB, actorC, "readSavedUser");
+seqDiagram.addMessage(actorC, actorB, "savedUser");
+seqDiagram.addMessage(actorB, actorA, "noNewEmails");
+
+seqDiagram.layout();
+```
 
 ## TODO
 If you have a feature request, just file an issue.

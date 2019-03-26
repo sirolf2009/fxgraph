@@ -16,11 +16,11 @@ public class Arrow extends Group {
         this(new Line(), new Line(), new Line());
     }
     
-    private Arrow(Line line, Line arrow1, Line arrow2) {
+    public Arrow(Line line, Line arrow1, Line arrow2) {
     	this(line, arrow1, arrow2, 10, 5);
     }
 
-    private Arrow(Line line, Line arrow1, Line arrow2, double arrowLength, double arrowWidth) {
+    public Arrow(Line line, Line arrow1, Line arrow2, double arrowLength, double arrowWidth) {
         super(line, arrow1, arrow2);
         this.line = line;
         InvalidationListener updater = o -> {
