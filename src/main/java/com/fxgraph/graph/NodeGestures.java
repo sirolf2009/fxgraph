@@ -2,6 +2,7 @@ package com.fxgraph.graph;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class NodeGestures {
@@ -42,18 +43,20 @@ public class NodeGestures {
 
 		@Override
 		public void handle(MouseEvent event) {
-			final Node node = (Node) event.getSource();
+			if (event.getButton() == MouseButton.PRIMARY) {
+				final Node node = (Node) event.getSource();
 
-			double offsetX = event.getScreenX() + dragContext.x;
-			double offsetY = event.getScreenY() + dragContext.y;
+				double offsetX = event.getScreenX() + dragContext.x;
+				double offsetY = event.getScreenY() + dragContext.y;
 
-			// adjust the offset in case we are zoomed
-			final double scale = graph.getScale();
+				// adjust the offset in case we are zoomed
+				final double scale = graph.getScale();
 
-			offsetX /= scale;
-			offsetY /= scale;
+				offsetX /= scale;
+				offsetY /= scale;
 
-			node.relocate(offsetX, offsetY);
+				node.relocate(offsetX, offsetY);
+			}
 		}
 	};
 
