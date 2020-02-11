@@ -73,6 +73,15 @@
 				</configuration>
 			</plugin>
 
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.4</version>
+                <configuration>
+                    <mainClass>com.fxgraph.graph.MainApp</mainClass>
+                </configuration>
+            </plugin>
+
 		</plugins>
 	</build>
 
@@ -191,6 +200,11 @@
 			<artifactId>org.abego.treelayout.core</artifactId>
 			<version>1.0.3</version>
 		</dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>13</version>
+        </dependency>
 	</dependencies>
 
 </project>
