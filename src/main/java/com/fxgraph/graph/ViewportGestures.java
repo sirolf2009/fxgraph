@@ -88,7 +88,7 @@ public class ViewportGestures {
 
 			if(event.getDeltaY() < 0) {
 				scale /= getZoomSpeed();
-			} else {
+			} else if (event.getDeltaY() > 0) {
 				scale *= getZoomSpeed();
 			}
 
