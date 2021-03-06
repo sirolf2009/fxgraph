@@ -3,6 +3,7 @@ package com.fxgraph.graph;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -16,11 +17,20 @@ public class ViewportGestures {
 	private final DoubleProperty minScaleProperty = new SimpleDoubleProperty(0.1d);
 
 	private final PannableCanvas.DragContext sceneDragContext = new PannableCanvas.DragContext();
+	private MouseButton panButton = MouseButton.PRIMARY;
 
-	PannableCanvas canvas;
+	private final PannableCanvas canvas;
 
 	public ViewportGestures(PannableCanvas canvas) {
 		this.canvas = canvas;
+	}
+
+	public MouseButton getPanButton() {
+		return panButton;
+	}
+
+	public void setPanButton(MouseButton panButton) {
+		this.panButton = panButton;
 	}
 
 	public EventHandler<MouseEvent> getOnMousePressedEventHandler() {
@@ -44,9 +54,8 @@ public class ViewportGestures {
 
 		@Override
 		public void handle(MouseEvent event) {
-
-			// right mouse button => panning
-			if(!event.isSecondaryButtonDown()) {
+			// target mouse button => panning
+			if(event.getButton() != getPanButton()) {
 				return;
 			}
 
@@ -63,9 +72,8 @@ public class ViewportGestures {
 	private final EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent event) {
-
-			// right mouse button => panning
-			if(!event.isSecondaryButtonDown()) {
+			// target mouse button => panning
+			if(event.getButton() != getPanButton()) {
 				return;
 			}
 

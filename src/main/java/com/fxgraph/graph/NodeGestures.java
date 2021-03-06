@@ -7,11 +7,20 @@ import javafx.scene.input.MouseEvent;
 
 public class NodeGestures {
 
-	final DragContext dragContext = new DragContext();
-	final Graph graph;
+	private final DragContext dragContext = new DragContext();
+	private final Graph graph;
+	private MouseButton dragButton = MouseButton.PRIMARY;
 
 	public NodeGestures(Graph graph) {
 		this.graph = graph;
+	}
+
+	public void setDragButton(MouseButton dragButton) {
+		this.dragButton = dragButton;
+	}
+
+	public MouseButton getDragButton() {
+		return dragButton;
 	}
 
 	public void makeDraggable(final Node node) {
@@ -43,7 +52,7 @@ public class NodeGestures {
 
 		@Override
 		public void handle(MouseEvent event) {
-			if (event.getButton() == MouseButton.PRIMARY) {
+			if (event.getButton() == getDragButton()) {
 				final Node node = (Node) event.getSource();
 
 				double offsetX = event.getScreenX() + dragContext.x;
