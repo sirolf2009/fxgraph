@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fxgraph.graph.Graph;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleProperty;
@@ -22,7 +23,7 @@ public class CellGestures {
 
 	static DragNodeSupplier NORTH = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty widthProperty = region.prefWidthProperty();
@@ -32,12 +33,12 @@ public class CellGestures {
 			resizeHandleN.xProperty().bind(xProperty.add(halfWidthProperty).subtract(handleRadius / 2));
 			resizeHandleN.yProperty().bind(yProperty.subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleN, mouseLocation, Cursor.N_RESIZE);
+			setUpDragging(resizeHandleN, mouseEvent, Cursor.N_RESIZE);
 
 			resizeHandleN.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragNorth(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragNorth(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleN;
@@ -46,7 +47,7 @@ public class CellGestures {
 
 	static DragNodeSupplier NORTH_EAST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty widthProperty = region.prefWidthProperty();
@@ -55,13 +56,13 @@ public class CellGestures {
 			resizeHandleNE.xProperty().bind(xProperty.add(widthProperty).subtract(handleRadius / 2));
 			resizeHandleNE.yProperty().bind(yProperty.subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleNE, mouseLocation, Cursor.NE_RESIZE);
+			setUpDragging(resizeHandleNE, mouseEvent, Cursor.NE_RESIZE);
 
 			resizeHandleNE.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragNorth(event, mouseLocation, region, handleRadius);
-					dragEast(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragNorth(event, mouseEvent, region, handleRadius);
+					dragEast(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleNE;
@@ -70,7 +71,7 @@ public class CellGestures {
 
 	static DragNodeSupplier EAST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty widthProperty = region.prefWidthProperty();
@@ -81,12 +82,12 @@ public class CellGestures {
 			resizeHandleE.xProperty().bind(xProperty.add(widthProperty).subtract(handleRadius / 2));
 			resizeHandleE.yProperty().bind(yProperty.add(halfHeightProperty).subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleE, mouseLocation, Cursor.E_RESIZE);
+			setUpDragging(resizeHandleE, mouseEvent, Cursor.E_RESIZE);
 
 			resizeHandleE.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragEast(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragEast(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleE;
@@ -95,7 +96,7 @@ public class CellGestures {
 
 	static DragNodeSupplier SOUTH_EAST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty widthProperty = region.prefWidthProperty();
@@ -105,13 +106,13 @@ public class CellGestures {
 			resizeHandleSE.xProperty().bind(xProperty.add(widthProperty).subtract(handleRadius / 2));
 			resizeHandleSE.yProperty().bind(yProperty.add(heightProperty).subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleSE, mouseLocation, Cursor.SE_RESIZE);
+			setUpDragging(resizeHandleSE, mouseEvent, Cursor.SE_RESIZE);
 
 			resizeHandleSE.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragSouth(event, mouseLocation, region, handleRadius);
-					dragEast(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragSouth(event, mouseEvent, region, handleRadius);
+					dragEast(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleSE;
@@ -120,7 +121,7 @@ public class CellGestures {
 
 	static DragNodeSupplier SOUTH = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty widthProperty = region.prefWidthProperty();
@@ -131,12 +132,12 @@ public class CellGestures {
 			resizeHandleS.xProperty().bind(xProperty.add(halfWidthProperty).subtract(handleRadius / 2));
 			resizeHandleS.yProperty().bind(yProperty.add(heightProperty).subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleS, mouseLocation, Cursor.S_RESIZE);
+			setUpDragging(resizeHandleS, mouseEvent, Cursor.S_RESIZE);
 
 			resizeHandleS.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragSouth(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragSouth(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleS;
@@ -145,7 +146,7 @@ public class CellGestures {
 
 	static DragNodeSupplier SOUTH_WEST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty heightProperty = region.prefHeightProperty();
@@ -154,13 +155,13 @@ public class CellGestures {
 			resizeHandleSW.xProperty().bind(xProperty.subtract(handleRadius / 2));
 			resizeHandleSW.yProperty().bind(yProperty.add(heightProperty).subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleSW, mouseLocation, Cursor.SW_RESIZE);
+			setUpDragging(resizeHandleSW, mouseEvent, Cursor.SW_RESIZE);
 
 			resizeHandleSW.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragSouth(event, mouseLocation, region, handleRadius);
-					dragWest(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragSouth(event, mouseEvent, region, handleRadius);
+					dragWest(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleSW;
@@ -169,7 +170,7 @@ public class CellGestures {
 
 	static DragNodeSupplier WEST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 			final ReadOnlyDoubleProperty heightProperty = region.prefHeightProperty();
@@ -179,12 +180,12 @@ public class CellGestures {
 			resizeHandleW.xProperty().bind(xProperty.subtract(handleRadius / 2));
 			resizeHandleW.yProperty().bind(yProperty.add(halfHeightProperty).subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleW, mouseLocation, Cursor.W_RESIZE);
+			setUpDragging(resizeHandleW, mouseEvent, Cursor.W_RESIZE);
 
 			resizeHandleW.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragWest(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragWest(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleW;
@@ -193,7 +194,7 @@ public class CellGestures {
 
 	static DragNodeSupplier NORTH_WEST = new DragNodeSupplier() {
 		@Override
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation) {
+		public Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent) {
 			final DoubleProperty xProperty = region.layoutXProperty();
 			final DoubleProperty yProperty = region.layoutYProperty();
 
@@ -201,26 +202,26 @@ public class CellGestures {
 			resizeHandleNW.xProperty().bind(xProperty.subtract(handleRadius / 2));
 			resizeHandleNW.yProperty().bind(yProperty.subtract(handleRadius / 2));
 
-			setUpDragging(resizeHandleNW, mouseLocation, Cursor.NW_RESIZE);
+			setUpDragging(resizeHandleNW, mouseEvent, Cursor.NW_RESIZE);
 
 			resizeHandleNW.setOnMouseDragged(event -> {
-				if(mouseLocation.value != null) {
-					dragNorth(event, mouseLocation, region, handleRadius);
-					dragWest(event, mouseLocation, region, handleRadius);
-					mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+				if(mouseEvent.value != null && mouseEvent.value.getButton() == graph.getNodeGestures().getDragButton()) {
+					dragNorth(event, mouseEvent, region, handleRadius);
+					dragWest(event, mouseEvent, region, handleRadius);
+					mouseEvent.value = event;
 				}
 			});
 			return resizeHandleNW;
 		}
 	};
 
-	public static void makeResizable(Region region) {
-		makeResizable(region, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST);
+	public static void makeResizable(Graph graph, Region region) {
+		makeResizable(graph, region, NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST);
 	}
 
-	public static void makeResizable(Region region, DragNodeSupplier... nodeSuppliers) {
-		final Wrapper<Point2D> mouseLocation = new Wrapper<>();
-		final List<Node> dragNodes = Arrays.stream(nodeSuppliers).map(supplier -> supplier.apply(region, mouseLocation)).collect(Collectors.toList());
+	public static void makeResizable(Graph graph, Region region, DragNodeSupplier... nodeSuppliers) {
+		final Wrapper<MouseEvent> mouseEvent = new Wrapper<>();
+		final List<Node> dragNodes = Arrays.stream(nodeSuppliers).map(supplier -> supplier.apply(graph, region, mouseEvent)).collect(Collectors.toList());
 		region.parentProperty().addListener((obs, oldParent, newParent) -> {
 			for(final Node c : dragNodes) {
 				final Pane currentParent = (Pane) c.getParent();
@@ -232,8 +233,8 @@ public class CellGestures {
 		});
 	}
 
-	private static void dragNorth(MouseEvent event, Wrapper<Point2D> mouseLocation, Region region, double handleRadius) {
-		final double deltaY = event.getSceneY() - mouseLocation.value.getY();
+	private static void dragNorth(MouseEvent event, Wrapper<MouseEvent> mouseEvent, Region region, double handleRadius) {
+		final double deltaY = event.getSceneY() - mouseEvent.value.getY();
 		final double newY = region.getLayoutY() + deltaY;
 		if(newY != 0 && newY >= handleRadius && newY <= region.getLayoutY() + region.getHeight() - handleRadius) {
 			region.setLayoutY(newY);
@@ -241,24 +242,24 @@ public class CellGestures {
 		}
 	}
 
-	private static void dragEast(MouseEvent event, Wrapper<Point2D> mouseLocation, Region region, double handleRadius) {
-		final double deltaX = event.getSceneX() - mouseLocation.value.getX();
+	private static void dragEast(MouseEvent event, Wrapper<MouseEvent> mouseEvent, Region region, double handleRadius) {
+		final double deltaX = event.getSceneX() - mouseEvent.value.getX();
 		final double newMaxX = region.getLayoutX() + region.getWidth() + deltaX;
 		if(newMaxX >= region.getLayoutX() && newMaxX <= region.getParent().getBoundsInLocal().getWidth() - handleRadius) {
 			region.setPrefWidth(region.getPrefWidth() + deltaX);
 		}
 	}
 
-	private static void dragSouth(MouseEvent event, Wrapper<Point2D> mouseLocation, Region region, double handleRadius) {
-		final double deltaY = event.getSceneY() - mouseLocation.value.getY();
+	private static void dragSouth(MouseEvent event, Wrapper<MouseEvent> mouseEvent, Region region, double handleRadius) {
+		final double deltaY = event.getSceneY() - mouseEvent.value.getY();
 		final double newMaxY = region.getLayoutY() + region.getHeight() + deltaY;
 		if(newMaxY >= region.getLayoutY() && newMaxY <= region.getParent().getBoundsInLocal().getHeight() - handleRadius) {
 			region.setPrefHeight(region.getPrefHeight() + deltaY);
 		}
 	}
 
-	private static void dragWest(MouseEvent event, Wrapper<Point2D> mouseLocation, Region region, double handleRadius) {
-		final double deltaX = event.getSceneX() - mouseLocation.value.getX();
+	private static void dragWest(MouseEvent event, Wrapper<MouseEvent> mouseEvent, Region region, double handleRadius) {
+		final double deltaX = event.getSceneX() - mouseEvent.value.getX();
 		final double newX = region.getLayoutX() + deltaX;
 		if(newX != 0 && newX <= region.getParent().getBoundsInLocal().getWidth() - handleRadius) {
 			region.setLayoutX(newX);
@@ -266,7 +267,7 @@ public class CellGestures {
 		}
 	}
 
-	private static void setUpDragging(Node node, Wrapper<Point2D> mouseLocation, Cursor hoverCursor) {
+	private static void setUpDragging(Node node, Wrapper<MouseEvent> mouseEvent, Cursor hoverCursor) {
 		node.setOnMouseEntered(event -> {
 			node.getParent().setCursor(hoverCursor);
 		});
@@ -275,12 +276,12 @@ public class CellGestures {
 		});
 		node.setOnDragDetected(event -> {
 			node.getParent().setCursor(Cursor.CLOSED_HAND);
-			mouseLocation.value = new Point2D(event.getSceneX(), event.getSceneY());
+			mouseEvent.value = event;
 		});
 
 		node.setOnMouseReleased(event -> {
 			node.getParent().setCursor(Cursor.DEFAULT);
-			mouseLocation.value = null;
+			mouseEvent.value = null;
 		});
 	}
 
@@ -288,10 +289,8 @@ public class CellGestures {
 		T value;
 	}
 
-	static interface DragNodeSupplier {
-
-		public Node apply(Region region, Wrapper<Point2D> mouseLocation);
-
+	interface DragNodeSupplier {
+		Node apply(Graph graph, Region region, Wrapper<MouseEvent> mouseEvent);
 	}
 
 }
