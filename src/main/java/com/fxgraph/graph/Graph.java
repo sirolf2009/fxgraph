@@ -41,7 +41,7 @@ public class Graph {
 		});
 
 		pannableCanvas = new PannableCanvas();
-		viewportGestures = new ViewportGestures(pannableCanvas);
+		viewportGestures = new ViewportGestures(this);
 		useViewportGestures = new SimpleBooleanProperty(true);
 		useViewportGestures.addListener((obs, oldVal, newVal) -> {
 			final Parent parent = pannableCanvas.parentProperty().get();
@@ -51,10 +51,12 @@ public class Graph {
 			if (newVal) {
 				parent.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				parent.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.addEventHandler(MouseEvent.MOUSE_RELEASED, viewportGestures.getOnMouseReleasedEventHandler());
 				parent.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			} else {
 				parent.removeEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				parent.removeEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				parent.removeEventHandler(MouseEvent.MOUSE_RELEASED, viewportGestures.getOnMouseReleasedEventHandler());
 				parent.removeEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 		});
@@ -62,11 +64,13 @@ public class Graph {
 			if (oldVal != null) {
 				oldVal.removeEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				oldVal.removeEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				oldVal.removeEventHandler(MouseEvent.MOUSE_RELEASED, viewportGestures.getOnMouseReleasedEventHandler());
 				oldVal.removeEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 			if (newVal != null) {
 				newVal.addEventHandler(MouseEvent.MOUSE_PRESSED, viewportGestures.getOnMousePressedEventHandler());
 				newVal.addEventHandler(MouseEvent.MOUSE_DRAGGED, viewportGestures.getOnMouseDraggedEventHandler());
+				newVal.addEventHandler(MouseEvent.MOUSE_RELEASED, viewportGestures.getOnMouseReleasedEventHandler());
 				newVal.addEventHandler(ScrollEvent.ANY, viewportGestures.getOnScrollEventHandler());
 			}
 		});
