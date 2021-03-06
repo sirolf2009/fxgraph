@@ -15,8 +15,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.abego.treelayout.Configuration.Location;
 
-public class Demo extends Application {
+public class BasicDemo extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -26,12 +27,12 @@ public class Demo extends Application {
 		populateGraph(graph);
 
 		// Layout nodes
-		graph.layout(new AbegoTreeLayout());
+		AbegoTreeLayout layout = new AbegoTreeLayout(100, 100, Location.Top);
+		graph.layout(layout);
 
 		// Configure interaction buttons and behavior
 		graph.getViewportGestures().setPanButton(MouseButton.SECONDARY);
 		graph.getNodeGestures().setDragButton(MouseButton.PRIMARY);
-		//graph.getCanvas().setKeyboardPannable(false);
 
 		// Display the graph
 		stage.setScene(new Scene(new BorderPane(graph.getCanvas())));
@@ -57,18 +58,25 @@ public class Demo extends Application {
 		model.addCell(cellF);
 		model.addCell(cellG);
 
-		final Edge edgeAB = new Edge(cellA, cellB);
+		final Edge edgeAB = new Edge(cellA, cellB, true);
 		edgeAB.textProperty().set("Edges can have text too!");
 		model.addEdge(edgeAB);
-		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, Orientation.HORIZONTAL);
+
+		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, true, Orientation.HORIZONTAL);
 		edgeAC.textProperty().set("Edges can have corners too!");
 		model.addEdge(edgeAC);
-		model.addEdge(cellB, cellD);
-		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, Orientation.HORIZONTAL);
+
+		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, true, Orientation.HORIZONTAL);
 		edgeBE.textProperty().set("You can implement custom edges and nodes too!");
 		model.addEdge(edgeBE);
-		model.addEdge(cellC, cellF);
+
+		final Edge edgeCF = new Edge(cellC, cellF, true);
+		edgeCF.textProperty().set("Edges can be directed");
+		model.addEdge(edgeCF);
+
 		model.addEdge(cellC, cellG);
+
+		model.addEdge(cellB, cellD);
 
 		graph.endUpdate();
 	}

@@ -1,21 +1,18 @@
 package com.fxgraph.graph;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.fxgraph.cells.AbstractCell;
-import com.fxgraph.edges.AbstractEdge;
-
+import com.fxgraph.edges.MessageEdge;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class SequenceDiagram extends Graph {
 
@@ -83,10 +80,16 @@ public class SequenceDiagram extends Graph {
 		return messages;
 	}
 
-	public static interface IActorCell extends ICell {
+	public interface IActorCell extends ICell {
 		
-		public String getName();
+		String getName();
 		
+	}
+
+	public interface IMessageEdge extends IEdge {
+
+		DoubleProperty yOffsetProperty();
+
 	}
 	
 	public static class ActorCell extends AbstractCell implements IActorCell {
@@ -119,14 +122,14 @@ public class SequenceDiagram extends Graph {
 		}
 		
 		@Override
-		public DoubleBinding getXAnchor(Graph graph, IEdge edge) {
+		public DoubleBinding getXAnchor(Graph graph) {
 			final Region graphic = graph.getGraphic(this);
 			final Label label = (Label) graphic.getChildrenUnmodifiable().get(0);
 			return graphic.layoutXProperty().add(label.widthProperty().divide(2));
 		}
 
 		@Override
-		public DoubleBinding getYAnchor(Graph graph, IEdge edge) {
+		public DoubleBinding getYAnchor(Graph graph) {
 			final Region graphic = graph.getGraphic(this);
 			final Label label = (Label) graphic.getChildrenUnmodifiable().get(0);
 			return graphic.layoutYProperty().add(label.heightProperty().divide(2));
@@ -137,64 +140,4 @@ public class SequenceDiagram extends Graph {
 		}
 		
 	}
-	
-	public static interface IMessageEdge extends IEdge {
-		
-		public DoubleProperty yOffsetProperty();
-		
-	}
-	
-	public static class MessageEdge extends AbstractEdge implements IMessageEdge {
-		
-		private final String name;
-		private final DoubleProperty yOffsetProperty = new SimpleDoubleProperty();
-		
-		public MessageEdge(IActorCell source, IActorCell target, String name) {
-			super(source, target);
-			this.name = name;
-		}
-
-		@Override
-		public Region getGraphic(Graph graph) {
-			Group group = new Group();
-			Arrow arrow = new Arrow();
-			arrow.getStyleClass().add("arrow");
-
-			final DoubleBinding sourceX = getSource().getXAnchor(graph, this);
-			final DoubleBinding sourceY = getSource().getYAnchor(graph, this).add(yOffsetProperty);
-			final DoubleBinding targetX = getTarget().getXAnchor(graph, this);
-			final DoubleBinding targetY = getTarget().getYAnchor(graph, this).add(yOffsetProperty);
-
-			arrow.startXProperty().bind(sourceX);
-			arrow.startYProperty().bind(sourceY);
-
-			arrow.endXProperty().bind(targetX);
-			arrow.endYProperty().bind(targetY);
-			group.getChildren().add(arrow);
-
-			final DoubleProperty textWidth = new SimpleDoubleProperty();
-			final DoubleProperty textHeight = new SimpleDoubleProperty();
-			
-			Text text = new Text(name);
-			text.getStyleClass().add("edge-text");
-			text.xProperty().bind(arrow.startXProperty().add(arrow.endXProperty()).divide(2).subtract(textWidth.divide(2)));
-			text.yProperty().bind(arrow.startYProperty().add(arrow.endYProperty()).divide(2).subtract(textHeight.divide(2)));
-			final Runnable recalculateWidth = () -> {
-				textWidth.set(text.getLayoutBounds().getWidth());
-				textHeight.set(text.getLayoutBounds().getHeight());
-			};
-			text.parentProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
-			text.textProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
-			group.getChildren().add(text);
-			Pane pane = new Pane(group);
-			pane.getStyleClass().add("message-edge");
-			return pane;
-		}
-		
-		public DoubleProperty yOffsetProperty() {
-			return yOffsetProperty;
-		}
-		
-	}
-
 }
