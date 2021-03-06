@@ -29,7 +29,7 @@ public class TriangleCell extends AbstractCell {
 		view.getTransforms().add(scale);
 		scale.xProperty().bind(pane.widthProperty().divide(50));
 		scale.yProperty().bind(pane.heightProperty().divide(50));
-		CellGestures.makeResizable(pane);
+		CellGestures.makeResizable(graph, pane);
 
 		return pane;
 	}

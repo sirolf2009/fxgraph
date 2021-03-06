@@ -3,6 +3,8 @@ package com.fxgraph.graph;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 
@@ -16,11 +18,22 @@ public class ViewportGestures {
 	private final DoubleProperty minScaleProperty = new SimpleDoubleProperty(0.1d);
 
 	private final PannableCanvas.DragContext sceneDragContext = new PannableCanvas.DragContext();
+	private final Graph graph;
+	private final PannableCanvas canvas;
+	private MouseButton panButton = MouseButton.PRIMARY;
 
-	PannableCanvas canvas;
 
-	public ViewportGestures(PannableCanvas canvas) {
-		this.canvas = canvas;
+	public ViewportGestures(Graph graph) {
+		this.graph = graph;
+		this.canvas = graph.getCanvas();
+	}
+
+	public MouseButton getPanButton() {
+		return panButton;
+	}
+
+	public void setPanButton(MouseButton panButton) {
+		this.panButton = panButton;
 	}
 
 	public EventHandler<MouseEvent> getOnMousePressedEventHandler() {
@@ -29,6 +42,10 @@ public class ViewportGestures {
 
 	public EventHandler<MouseEvent> getOnMouseDraggedEventHandler() {
 		return onMouseDraggedEventHandler;
+	}
+
+	public EventHandler<MouseEvent> getOnMouseReleasedEventHandler() {
+		return onMouseReleasedEventHandler;
 	}
 
 	public EventHandler<ScrollEvent> getOnScrollEventHandler() {
@@ -44,35 +61,39 @@ public class ViewportGestures {
 
 		@Override
 		public void handle(MouseEvent event) {
+			// target mouse button => panning
+			if(event.getButton() == getPanButton()) {
+				sceneDragContext.mouseAnchorX = event.getSceneX();
+				sceneDragContext.mouseAnchorY = event.getSceneY();
 
-			// right mouse button => panning
-			if(!event.isSecondaryButtonDown()) {
-				return;
+				sceneDragContext.translateAnchorX = canvas.getTranslateX();
+				sceneDragContext.translateAnchorY = canvas.getTranslateY();
+
+				event.consume();
 			}
-
-			sceneDragContext.mouseAnchorX = event.getSceneX();
-			sceneDragContext.mouseAnchorY = event.getSceneY();
-
-			sceneDragContext.translateAnchorX = canvas.getTranslateX();
-			sceneDragContext.translateAnchorY = canvas.getTranslateY();
-
 		}
-
 	};
 
 	private final EventHandler<MouseEvent> onMouseDraggedEventHandler = new EventHandler<MouseEvent>() {
 		@Override
 		public void handle(MouseEvent event) {
+			// target mouse button => panning
+			if(event.getButton() == getPanButton()) {
+				canvas.setTranslateX(sceneDragContext.translateAnchorX + event.getSceneX() - sceneDragContext.mouseAnchorX);
+				canvas.setTranslateY(sceneDragContext.translateAnchorY + event.getSceneY() - sceneDragContext.mouseAnchorY);
 
-			// right mouse button => panning
-			if(!event.isSecondaryButtonDown()) {
-				return;
+				event.consume();
 			}
+		}
+	};
 
-			canvas.setTranslateX(sceneDragContext.translateAnchorX + event.getSceneX() - sceneDragContext.mouseAnchorX);
-			canvas.setTranslateY(sceneDragContext.translateAnchorY + event.getSceneY() - sceneDragContext.mouseAnchorY);
-
-			event.consume();
+	private final EventHandler<MouseEvent> onMouseReleasedEventHandler = new EventHandler<MouseEvent>() {
+		@Override
+		public void handle(MouseEvent event) {
+			// target mouse button => panning
+			if(event.getButton() == getPanButton()) {
+				graph.getNodeGestures().revertLastNodeTransparency();
+			}
 		}
 	};
 
