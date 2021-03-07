@@ -1,23 +1,13 @@
 package com.fxgraph;
 
-import com.fxgraph.cells.RectangleCell;
-import com.fxgraph.edges.CorneredEdge;
-import com.fxgraph.edges.DoubleCorneredEdge;
-import com.fxgraph.edges.Edge;
-import com.fxgraph.graph.Graph;
-import com.fxgraph.graph.ICell;
-import com.fxgraph.graph.Model;
 import com.fxgraph.graph.SequenceDiagram;
 import com.fxgraph.graph.SequenceDiagram.ActorCell;
 import com.fxgraph.graph.SequenceDiagram.IActorCell;
-import com.fxgraph.layout.AbegoTreeLayout;
 import javafx.application.Application;
-import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.abego.treelayout.Configuration.Location;
 
 public class SequenceDiagramDemo extends Application {
 

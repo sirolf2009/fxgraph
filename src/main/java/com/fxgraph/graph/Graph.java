@@ -1,17 +1,16 @@
 package com.fxgraph.graph;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fxgraph.layout.Layout;
-
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Region;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Graph {
 

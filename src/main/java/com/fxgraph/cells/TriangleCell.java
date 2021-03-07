@@ -1,7 +1,6 @@
 package com.fxgraph.cells;
 
 import com.fxgraph.graph.Graph;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;

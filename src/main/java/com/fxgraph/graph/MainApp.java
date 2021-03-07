@@ -1,9 +1,5 @@
 package com.fxgraph.graph;
 
-import java.util.Arrays;
-
-import org.abego.treelayout.Configuration.Location;
-
 import com.fxgraph.cells.RectangleCell;
 import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.CorneredEdge;
@@ -11,12 +7,14 @@ import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.SequenceDiagram.ActorCell;
 import com.fxgraph.layout.AbegoTreeLayout;
-
 import javafx.application.Application;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.stage.Stage;
+import org.abego.treelayout.Configuration.Location;
+
+import java.util.Arrays;
 
 public class MainApp extends Application {
 

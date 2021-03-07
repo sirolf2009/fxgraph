@@ -1,10 +1,10 @@
 package com.fxgraph.graph;
 
-import java.util.List;
-
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.Region;
+
+import java.util.List;
 
 public interface ICell extends IGraphNode {
 

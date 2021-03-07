@@ -2,18 +2,13 @@ package com.fxgraph.edges;
 
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
-import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.geometry.Point2D;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
-
-import java.lang.reflect.Field;
-import java.util.concurrent.Callable;
 
 public class Edge extends AbstractEdge {
 

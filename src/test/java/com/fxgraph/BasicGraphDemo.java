@@ -1,7 +1,6 @@
 package com.fxgraph;
 
 import com.fxgraph.cells.RectangleCell;
-import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.CorneredEdge;
 import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
