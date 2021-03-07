@@ -27,7 +27,7 @@ public class BasicDemo extends Application {
 		populateGraph(graph);
 
 		// Layout nodes
-		AbegoTreeLayout layout = new AbegoTreeLayout(100, 100, Location.Top);
+		AbegoTreeLayout layout = new AbegoTreeLayout(200, 200, Location.Top);
 		graph.layout(layout);
 
 		// Configure interaction buttons and behavior
@@ -45,8 +45,8 @@ public class BasicDemo extends Application {
 		final ICell cellA = new RectangleCell();
 		final ICell cellB = new RectangleCell();
 		final ICell cellC = new RectangleCell();
-		final ICell cellD = new TriangleCell();
-		final ICell cellE = new TriangleCell();
+		final ICell cellD = new RectangleCell();
+		final ICell cellE = new RectangleCell();
 		final ICell cellF = new RectangleCell();
 		final ICell cellG = new RectangleCell();
 
@@ -59,19 +59,19 @@ public class BasicDemo extends Application {
 		model.addCell(cellG);
 
 		final Edge edgeAB = new Edge(cellA, cellB, true);
-		edgeAB.textProperty().set("Edges can have text too!");
+		edgeAB.textProperty().set("Directed Edge");
 		model.addEdge(edgeAB);
 
 		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, true, Orientation.HORIZONTAL);
-		edgeAC.textProperty().set("Edges can have corners too!");
+		edgeAC.textProperty().set("Directed CorneredEdge");
 		model.addEdge(edgeAC);
 
 		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, true, Orientation.HORIZONTAL);
-		edgeBE.textProperty().set("You can implement custom edges and nodes too!");
+		edgeBE.textProperty().set("Directed DoubleCorneredEdge");
 		model.addEdge(edgeBE);
 
 		final Edge edgeCF = new Edge(cellC, cellF, true);
-		edgeCF.textProperty().set("Edges can be directed");
+		edgeCF.textProperty().set("Directed Edge");
 		model.addEdge(edgeCF);
 
 		model.addEdge(cellC, cellG);

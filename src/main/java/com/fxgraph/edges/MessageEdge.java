@@ -39,6 +39,9 @@ public class MessageEdge extends AbstractEdge implements IMessageEdge {
 			final DoubleBinding targetY = edge.getTarget().getYAnchor(graph).add(edge.yOffsetProperty);
 
 			if (edge.isDirected()) {
+				Region target = graph.getGraphic(edge.getTarget());
+				setupArrow(target, sourceX, sourceY, targetX, targetY);
+				/*
 				arrow.getStyleClass().add("arrow");
 
 				arrow.startXProperty().bind(sourceX);
@@ -46,6 +49,8 @@ public class MessageEdge extends AbstractEdge implements IMessageEdge {
 
 				arrow.endXProperty().bind(targetX);
 				arrow.endYProperty().bind(targetY);
+
+				 */
 				group.getChildren().add(arrow);
 			}
 

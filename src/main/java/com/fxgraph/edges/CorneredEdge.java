@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -65,11 +66,8 @@ public class CorneredEdge extends AbstractEdge {
 				group.getChildren().add(lineA);
 
 				if (edge.isDirected()) {
-					arrow.getStyleClass().add("arrow");
-					arrow.startXProperty().bind(targetX);
-					arrow.startYProperty().bind(sourceY);
-					arrow.endXProperty().bind(targetX);
-					arrow.endYProperty().bind(targetY);
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrow(target, targetX, sourceY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					final Line lineB = new Line();
@@ -92,11 +90,8 @@ public class CorneredEdge extends AbstractEdge {
 				group.getChildren().add(lineA);
 
 				if (edge.isDirected()) {
-					arrow.getStyleClass().add("arrow");
-					arrow.startXProperty().bind(sourceX);
-					arrow.startYProperty().bind(targetY);
-					arrow.endXProperty().bind(targetX);
-					arrow.endYProperty().bind(targetY);
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrow(target, sourceX, targetY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					final Line lineB = new Line();

@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -82,11 +83,8 @@ public class DoubleCorneredEdge extends AbstractEdge {
 				group.getChildren().add(lineB);
 
 				if (edge.isDirected()) {
-					arrow.getStyleClass().add("arrow");
-					arrow.startXProperty().bind(centerX);
-					arrow.startYProperty().bind(targetY);
-					arrow.endXProperty().bind(targetX);
-					arrow.endYProperty().bind(targetY);
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrow(target, centerX, targetY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					lineC.startXProperty().bind(centerX);
@@ -111,11 +109,8 @@ public class DoubleCorneredEdge extends AbstractEdge {
 				group.getChildren().add(lineB);
 
 				if (edge.isDirected()) {
-					arrow.getStyleClass().add("arrow");
-					arrow.startXProperty().bind(targetX);
-					arrow.startYProperty().bind(centerY);
-					arrow.endXProperty().bind(targetX);
-					arrow.endYProperty().bind(targetY);
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrow(target, targetX, centerY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					lineC.startXProperty().bind(targetX);
