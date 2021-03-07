@@ -17,7 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.abego.treelayout.Configuration.Location;
 
-public class BasicDemo extends Application {
+public class BasicGraphDemo extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {

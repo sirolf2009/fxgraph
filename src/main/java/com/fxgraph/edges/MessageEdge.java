@@ -38,21 +38,15 @@ public class MessageEdge extends AbstractEdge implements IMessageEdge {
 			final DoubleBinding targetX = edge.getTarget().getXAnchor(graph);
 			final DoubleBinding targetY = edge.getTarget().getYAnchor(graph).add(edge.yOffsetProperty);
 
-			if (edge.isDirected()) {
-				Region target = graph.getGraphic(edge.getTarget());
-				setupArrow(target, sourceX, sourceY, targetX, targetY);
-				/*
-				arrow.getStyleClass().add("arrow");
+			arrow.getStyleClass().add("arrow");
 
-				arrow.startXProperty().bind(sourceX);
-				arrow.startYProperty().bind(sourceY);
+			arrow.startXProperty().bind(sourceX);
+			arrow.startYProperty().bind(sourceY);
 
-				arrow.endXProperty().bind(targetX);
-				arrow.endYProperty().bind(targetY);
+			arrow.endXProperty().bind(targetX);
+			arrow.endYProperty().bind(targetY);
 
-				 */
-				group.getChildren().add(arrow);
-			}
+			group.getChildren().add(arrow);
 
 			final DoubleProperty textWidth = new SimpleDoubleProperty();
 			final DoubleProperty textHeight = new SimpleDoubleProperty();
