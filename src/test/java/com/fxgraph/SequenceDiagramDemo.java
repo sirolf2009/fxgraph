@@ -33,8 +33,8 @@ public class SequenceDiagramDemo extends Application {
 		diagram.beginUpdate();
 
 		final IActorCell cellA = new ActorCell("Planning", 60.0);
-		final IActorCell cellB = new ActorCell("Design", 260.0);
-		final IActorCell cellC = new ActorCell("Implementation", 260.0);
+		final IActorCell cellB = new ActorCell("Design", 360.0);
+		final IActorCell cellC = new ActorCell("Implementation", 360.0);
 		final IActorCell cellD = new ActorCell("Testing", 360.0);
 		final IActorCell cellE = new ActorCell("Release", 360.0);
 
@@ -48,9 +48,9 @@ public class SequenceDiagramDemo extends Application {
 		diagram.addMessage(cellB, cellC, "Design plans created");
 		diagram.addMessage(cellC, cellD, "Logic implemented");
 		diagram.addMessage(cellC, cellB, "New requirement");
-		diagram.addMessage(cellE, cellB, "New requirement");
 		diagram.addMessage(cellD, cellE, "All tests pass");
 		diagram.addMessage(cellE, cellD, "User reports bug");
+		diagram.addMessage(cellE, cellB, "New requirement");
 
 		diagram.endUpdate();
 	}
