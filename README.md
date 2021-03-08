@@ -8,6 +8,7 @@ You can find the original question here: https://stackoverflow.com/questions/306
  - Resizable nodes
  - Zooming / Panning
  - Custom nodes and edges
+ - Directed and non-directed edges
  - Random layout
  - Tree layout
  - Sequence Diagram
@@ -26,7 +27,7 @@ You can get it from maven central
 ``` 
 
 ## Usage
-You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code for the graph in the screenshot above is as follows
+You can look at the [test classes](src/test/java/com/fxgraph) for basic examples. The relevant code for the graph in the screenshot above is as follows
 ```java
 Graph graph = new Graph();
 final Model model = graph.getModel();

@@ -1,30 +1,41 @@
 package com.fxgraph.graph;
 
-import java.util.List;
-
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.scene.layout.Region;
+
+import java.util.List;
 
 public interface ICell extends IGraphNode {
 
-	public void addCellChild(ICell cell);
+	void addCellChild(ICell cell);
 
-	public List<ICell> getCellChildren();
+	List<ICell> getCellChildren();
 
-	public void addCellParent(ICell cell);
+	void addCellParent(ICell cell);
 
-	public List<ICell> getCellParents();
+	List<ICell> getCellParents();
 
-	public void removeCellChild(ICell cell);
+	void removeCellChild(ICell cell);
 
-	default DoubleBinding getXAnchor(Graph graph, IEdge edge) {
+	default DoubleBinding getXAnchor(Graph graph) {
 		final Region graphic = graph.getGraphic(this);
 		return graphic.layoutXProperty().add(graphic.widthProperty().divide(2));
 	}
 
-	default DoubleBinding getYAnchor(Graph graph, IEdge edge) {
+	default DoubleBinding getYAnchor(Graph graph) {
 		final Region graphic = graph.getGraphic(this);
 		return graphic.layoutYProperty().add(graphic.heightProperty().divide(2));
+	}
+
+	default ReadOnlyDoubleProperty getWidth(Graph graph) {
+		final Region graphic = graph.getGraphic(this);
+		return graphic.widthProperty();
+	}
+
+	default ReadOnlyDoubleProperty getHeight(Graph graph) {
+		final Region graphic = graph.getGraphic(this);
+		return graphic.heightProperty();
 	}
 
 }

@@ -1,14 +1,13 @@
 package com.fxgraph.graph;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.fxgraph.cells.AbstractCell;
 import com.fxgraph.edges.Edge;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class Model implements Serializable {
 

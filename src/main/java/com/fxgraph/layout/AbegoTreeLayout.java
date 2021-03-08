@@ -1,14 +1,13 @@
 package com.fxgraph.layout;
 
+import com.fxgraph.graph.Graph;
+import com.fxgraph.graph.ICell;
 import org.abego.treelayout.Configuration;
 import org.abego.treelayout.Configuration.Location;
 import org.abego.treelayout.NodeExtentProvider;
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
 import org.abego.treelayout.util.DefaultTreeForTreeLayout;
-
-import com.fxgraph.graph.Graph;
-import com.fxgraph.graph.ICell;
 
 public class AbegoTreeLayout implements Layout {
 

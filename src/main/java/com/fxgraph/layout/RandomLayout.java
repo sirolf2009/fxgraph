@@ -1,10 +1,10 @@
 package com.fxgraph.layout;
 
-import java.util.List;
-import java.util.Random;
-
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
+
+import java.util.List;
+import java.util.Random;
 
 public class RandomLayout implements Layout {
 

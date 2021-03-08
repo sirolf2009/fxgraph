@@ -2,7 +2,6 @@ package com.fxgraph.edges;
 
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
-
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -10,7 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Group;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
@@ -20,7 +19,11 @@ public class CorneredEdge extends AbstractEdge {
 	private final Orientation orientation;
 
 	public CorneredEdge(ICell source, ICell target, Orientation orientation) {
-		super(source, target);
+		this(source, target, false, orientation);
+	}
+
+	public CorneredEdge(ICell source, ICell target, boolean isDirected, Orientation orientation) {
+		super(source, target, isDirected);
 		this.orientation = orientation;
 		textProperty = new SimpleStringProperty();
 	}
@@ -34,18 +37,15 @@ public class CorneredEdge extends AbstractEdge {
 		return textProperty;
 	}
 
-	public static class EdgeGraphic extends Pane {
-
-		private final Group group;
-		private final Text text;
+	public static class EdgeGraphic extends AbstractEdgeGraphic {
 
 		public EdgeGraphic(Graph graph, CorneredEdge edge, Orientation orientation, StringProperty textProperty) {
-			final DoubleBinding sourceX = edge.getSource().getXAnchor(graph, edge);
-			final DoubleBinding sourceY = edge.getSource().getYAnchor(graph, edge);
-			final DoubleBinding targetX = edge.getTarget().getXAnchor(graph, edge);
-			final DoubleBinding targetY = edge.getTarget().getYAnchor(graph, edge);
+			super();
+			final DoubleBinding sourceX = edge.getSource().getXAnchor(graph);
+			final DoubleBinding sourceY = edge.getSource().getYAnchor(graph);
+			final DoubleBinding targetX = edge.getTarget().getXAnchor(graph);
+			final DoubleBinding targetY = edge.getTarget().getYAnchor(graph);
 
-			text = new Text();
 			text.textProperty().bind(textProperty);
 			text.getStyleClass().add("edge-text");
 			final DoubleProperty textWidth = new SimpleDoubleProperty();
@@ -58,36 +58,49 @@ public class CorneredEdge extends AbstractEdge {
 			text.textProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
 
 			if(orientation == Orientation.HORIZONTAL) {
-				group = new Group();
 				final Line lineA = new Line();
 				lineA.startXProperty().bind(sourceX);
 				lineA.startYProperty().bind(sourceY);
 				lineA.endXProperty().bind(targetX);
 				lineA.endYProperty().bind(sourceY);
 				group.getChildren().add(lineA);
-				final Line lineB = new Line();
-				lineB.startXProperty().bind(targetX);
-				lineB.startYProperty().bind(sourceY);
-				lineB.endXProperty().bind(targetX);
-				lineB.endYProperty().bind(targetY);
-				group.getChildren().add(lineB);
+
+				if (edge.isDirected()) {
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrowIntersect(target, targetX, sourceY, targetX, targetY);
+					group.getChildren().add(arrow);
+				} else {
+					final Line lineB = new Line();
+					lineB.startXProperty().bind(targetX);
+					lineB.startYProperty().bind(sourceY);
+					lineB.endXProperty().bind(targetX);
+					lineB.endYProperty().bind(targetY);
+					group.getChildren().add(lineB);
+				}
+
 
 				text.xProperty().bind(targetX.subtract(textWidth.divide(2)));
 				text.yProperty().bind(sourceY.subtract(textHeight.divide(2)));
 			} else {
-				group = new Group();
 				final Line lineA = new Line();
 				lineA.startXProperty().bind(sourceX);
 				lineA.startYProperty().bind(sourceY);
 				lineA.endXProperty().bind(sourceX);
 				lineA.endYProperty().bind(targetY);
 				group.getChildren().add(lineA);
-				final Line lineB = new Line();
-				lineB.startXProperty().bind(sourceX);
-				lineB.startYProperty().bind(targetY);
-				lineB.endXProperty().bind(targetX);
-				lineB.endYProperty().bind(targetY);
-				group.getChildren().add(lineB);
+
+				if (edge.isDirected()) {
+					Region target = graph.getGraphic(edge.getTarget());
+					setupArrowIntersect(target, sourceX, targetY, targetX, targetY);
+					group.getChildren().add(arrow);
+				} else {
+					final Line lineB = new Line();
+					lineB.startXProperty().bind(sourceX);
+					lineB.startYProperty().bind(targetY);
+					lineB.endXProperty().bind(targetX);
+					lineB.endYProperty().bind(targetY);
+					group.getChildren().add(lineB);
+				}
 
 				text.xProperty().bind(sourceX.subtract(textWidth.divide(2)));
 				text.yProperty().bind(targetY.subtract(textHeight.divide(2)));

@@ -2,39 +2,62 @@ package com.fxgraph.edges;
 
 import com.fxgraph.graph.Graph;
 import com.fxgraph.graph.ICell;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 
-public class DoubleCorneredEdge extends AbstractEdge {
+public class CorneredLoopEdge extends AbstractEdge {
 
+	private final DoubleProperty separationProperty = new SimpleDoubleProperty(15);
+	private final DoubleProperty widthProperty = new SimpleDoubleProperty(0.5);
 	private final StringProperty textProperty;
-	private final Orientation orientation;
+	private final Position pos;
 
-	public DoubleCorneredEdge(ICell source, ICell target, Orientation orientation) {
-		this(source, target, false, orientation);
-	}
-
-	public DoubleCorneredEdge(ICell source, ICell target, boolean isDirected, Orientation orientation) {
-		super(source, target, isDirected);
-		this.orientation = orientation;
+	public CorneredLoopEdge(ICell target, Position pos) {
+		super(target, target, true);
+		this.pos = pos;
 		textProperty = new SimpleStringProperty();
 	}
 
 	@Override
+	protected void linkCells() {
+		// no-op
+	}
+
+	@Override
 	public EdgeGraphic getGraphic(Graph graph) {
-		return new EdgeGraphic(graph, this, orientation, textProperty);
+		return new EdgeGraphic(graph, this, pos, textProperty, separationProperty, widthProperty);
 	}
 
 	public StringProperty textProperty() {
 		return textProperty;
+	}
+
+	public DoubleProperty separationProperty() {
+		return separationProperty;
+	}
+
+	public DoubleProperty widthProperty() {
+		return widthProperty;
+	}
+
+	public enum Position {
+		TOP, RIGHT, BOTTOM, LEFT;
+
+		boolean isVertical() {
+			return this == LEFT || this == RIGHT;
+		}
+
+		boolean isHorizontal() {
+			return this == TOP || this == BOTTOM;
+		}
 	}
 
 	public static class EdgeGraphic extends AbstractEdgeGraphic {
@@ -49,14 +72,44 @@ public class DoubleCorneredEdge extends AbstractEdge {
 		private final Line lineB = new Line();
 		private final Line lineC = new Line();
 
-		public EdgeGraphic(Graph graph, DoubleCorneredEdge edge, Orientation orientation, StringProperty textProperty) {
-			sourceX = edge.getSource().getXAnchor(graph);
-			sourceY = edge.getSource().getYAnchor(graph);
-			targetX = edge.getTarget().getXAnchor(graph);
-			targetY = edge.getTarget().getYAnchor(graph);
+		public EdgeGraphic(Graph graph, CorneredLoopEdge edge, Position position, StringProperty textProperty,
+						   DoubleProperty separation, DoubleProperty width) {
+			DoubleBinding w = edge.getTarget().getWidth(graph).add(0.000001);
+			DoubleBinding h = edge.getTarget().getHeight(graph).add(0.000001);
+			DoubleBinding x = edge.getTarget().getXAnchor(graph);
+			DoubleBinding y = edge.getTarget().getYAnchor(graph);
 
-			centerX = sourceX.add(targetX).divide(2);
-			centerY = sourceY.add(targetY).divide(2);
+			if (position.isVertical()) {
+				sourceY = y.subtract(h.divide(2.0).multiply(width));
+				targetY = y.add(h.divide(2.0).multiply(width));
+
+				if (position == Position.LEFT) {
+					sourceX = x.subtract(w.divide(2.0));
+					targetX = sourceX;
+					centerX = sourceX.subtract(w.divide(2.0)).subtract(separation);
+				} else {
+					sourceX = x.add(w.divide(2.0));
+					targetX = sourceX;
+					centerX = sourceX.add(w.divide(2.0)).add(separation);
+				}
+
+				centerY = sourceY.add(targetY).divide(2);
+			} else {
+				sourceX = x.subtract(w.divide(2.0).multiply(width));
+				targetX = x.add(w.divide(2.0).multiply(width));
+
+				if (position == Position.TOP) {
+					sourceY = y.subtract(h.divide(2.0));
+					targetY = sourceY;
+					centerY = sourceY.subtract(h.divide(2.0)).subtract(separation);
+				} else {
+					sourceY = y.add(h.divide(2.0));
+					targetY = sourceY;
+					centerY = sourceY.add(h.divide(2.0)).add(separation);
+				}
+
+				centerX = sourceX.add(targetX).divide(2);
+			}
 
 			text.textProperty().bind(textProperty);
 			text.getStyleClass().add("edge-text");
@@ -69,7 +122,15 @@ public class DoubleCorneredEdge extends AbstractEdge {
 			text.parentProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
 			text.textProperty().addListener((obs, oldVal, newVal) -> recalculateWidth.run());
 
-			if(orientation == Orientation.HORIZONTAL) {
+			if (position == Position.TOP) {
+				text.yProperty().bind(centerY.subtract(textHeight.divide(2)));
+			} else {
+				text.yProperty().bind(centerY.add(textHeight.divide(2)));
+			}
+			text.xProperty().bind(centerX.subtract(textWidth.divide(2)));
+
+
+			if(position.isVertical()) {
 				lineA.startXProperty().bind(sourceX);
 				lineA.startYProperty().bind(sourceY);
 				lineA.endXProperty().bind(centerX);
@@ -82,19 +143,8 @@ public class DoubleCorneredEdge extends AbstractEdge {
 				lineB.endYProperty().bind(targetY);
 				group.getChildren().add(lineB);
 
-				if (edge.isDirected()) {
-					Region target = graph.getGraphic(edge.getTarget());
-					setupArrowIntersect(target, centerX, targetY, targetX, targetY);
-					group.getChildren().add(arrow);
-				} else {
-					lineC.startXProperty().bind(centerX);
-					lineC.startYProperty().bind(targetY);
-					lineC.endXProperty().bind(targetX);
-					lineC.endYProperty().bind(targetY);
-					group.getChildren().add(lineC);
-				}
-
-
+				setupArrow(centerX, targetY, targetX, targetY);
+				group.getChildren().add(arrow);
 			} else {
 				lineA.startXProperty().bind(sourceX);
 				lineA.startYProperty().bind(sourceY);
@@ -108,20 +158,9 @@ public class DoubleCorneredEdge extends AbstractEdge {
 				lineB.endYProperty().bind(centerY);
 				group.getChildren().add(lineB);
 
-				if (edge.isDirected()) {
-					Region target = graph.getGraphic(edge.getTarget());
-					setupArrowIntersect(target, targetX, centerY, targetX, targetY);
-					group.getChildren().add(arrow);
-				} else {
-					lineC.startXProperty().bind(targetX);
-					lineC.startYProperty().bind(centerY);
-					lineC.endXProperty().bind(targetX);
-					lineC.endYProperty().bind(targetY);
-					group.getChildren().add(lineC);
-				}
+				setupArrow(targetX, centerY, targetX, targetY);
+				group.getChildren().add(arrow);
 			}
-			text.xProperty().bind(centerX.subtract(textWidth.divide(2)));
-			text.yProperty().bind(centerY.subtract(textHeight.divide(2)));
 
 			group.getChildren().add(text);
 			getChildren().add(group);

@@ -1,9 +1,9 @@
 package com.fxgraph.cells;
 
+import com.fxgraph.graph.ICell;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fxgraph.graph.ICell;
 
 public abstract class AbstractCell implements ICell {
 

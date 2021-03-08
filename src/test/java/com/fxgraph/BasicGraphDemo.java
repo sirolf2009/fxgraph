@@ -1,8 +1,9 @@
 package com.fxgraph;
 
 import com.fxgraph.cells.RectangleCell;
-import com.fxgraph.cells.TriangleCell;
 import com.fxgraph.edges.CorneredEdge;
+import com.fxgraph.edges.CorneredLoopEdge;
+import com.fxgraph.edges.CorneredLoopEdge.Position;
 import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
@@ -15,8 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.abego.treelayout.Configuration.Location;
 
-public class Demo extends Application {
+public class BasicGraphDemo extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -26,12 +28,12 @@ public class Demo extends Application {
 		populateGraph(graph);
 
 		// Layout nodes
-		graph.layout(new AbegoTreeLayout());
+		AbegoTreeLayout layout = new AbegoTreeLayout(200, 200, Location.Top);
+		graph.layout(layout);
 
 		// Configure interaction buttons and behavior
 		graph.getViewportGestures().setPanButton(MouseButton.SECONDARY);
 		graph.getNodeGestures().setDragButton(MouseButton.PRIMARY);
-		//graph.getCanvas().setKeyboardPannable(false);
 
 		// Display the graph
 		stage.setScene(new Scene(new BorderPane(graph.getCanvas())));
@@ -44,8 +46,8 @@ public class Demo extends Application {
 		final ICell cellA = new RectangleCell();
 		final ICell cellB = new RectangleCell();
 		final ICell cellC = new RectangleCell();
-		final ICell cellD = new TriangleCell();
-		final ICell cellE = new TriangleCell();
+		final ICell cellD = new RectangleCell();
+		final ICell cellE = new RectangleCell();
 		final ICell cellF = new RectangleCell();
 		final ICell cellG = new RectangleCell();
 
@@ -57,18 +59,29 @@ public class Demo extends Application {
 		model.addCell(cellF);
 		model.addCell(cellG);
 
-		final Edge edgeAB = new Edge(cellA, cellB);
-		edgeAB.textProperty().set("Edges can have text too!");
+		final Edge edgeAB = new Edge(cellA, cellB, true);
+		edgeAB.textProperty().set("Directed Edge");
 		model.addEdge(edgeAB);
-		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, Orientation.HORIZONTAL);
-		edgeAC.textProperty().set("Edges can have corners too!");
+
+		final CorneredEdge edgeAC = new CorneredEdge(cellA, cellC, true, Orientation.HORIZONTAL);
+		edgeAC.textProperty().set("Directed CorneredEdge");
 		model.addEdge(edgeAC);
-		model.addEdge(cellB, cellD);
-		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, Orientation.HORIZONTAL);
-		edgeBE.textProperty().set("You can implement custom edges and nodes too!");
+
+		final DoubleCorneredEdge edgeBE = new DoubleCorneredEdge(cellB, cellE, true, Orientation.HORIZONTAL);
+		edgeBE.textProperty().set("Directed DoubleCorneredEdge");
 		model.addEdge(edgeBE);
-		model.addEdge(cellC, cellF);
+
+		final Edge edgeCF = new Edge(cellC, cellF, true);
+		edgeCF.textProperty().set("Directed Edge");
+		model.addEdge(edgeCF);
+
+		final CorneredLoopEdge loopFTop = new CorneredLoopEdge(cellF, Position.TOP);
+		loopFTop.textProperty().set("Loop top");
+		model.addEdge(loopFTop);
+
 		model.addEdge(cellC, cellG);
+
+		model.addEdge(cellB, cellD);
 
 		graph.endUpdate();
 	}
