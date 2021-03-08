@@ -26,7 +26,7 @@ You can get it from maven central
 ``` 
 
 ## Usage
-You can look at ```com.fxgraph.graph.MainApp``` for a basic example. The relevant code for the graph in the screenshot above is as follows
+You can look at the [test classes](src/test/java/com/fxgraph) for a basic examples. The relevant code for the graph in the screenshot above is as follows
 ```java
 Graph graph = new Graph();
 final Model model = graph.getModel();
