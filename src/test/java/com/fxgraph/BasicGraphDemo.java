@@ -2,6 +2,8 @@ package com.fxgraph;
 
 import com.fxgraph.cells.RectangleCell;
 import com.fxgraph.edges.CorneredEdge;
+import com.fxgraph.edges.CorneredLoopEdge;
+import com.fxgraph.edges.CorneredLoopEdge.Position;
 import com.fxgraph.edges.DoubleCorneredEdge;
 import com.fxgraph.edges.Edge;
 import com.fxgraph.graph.Graph;
@@ -72,6 +74,10 @@ public class BasicGraphDemo extends Application {
 		final Edge edgeCF = new Edge(cellC, cellF, true);
 		edgeCF.textProperty().set("Directed Edge");
 		model.addEdge(edgeCF);
+
+		final CorneredLoopEdge loopFTop = new CorneredLoopEdge(cellF, Position.TOP);
+		loopFTop.textProperty().set("Loop top");
+		model.addEdge(loopFTop);
 
 		model.addEdge(cellC, cellG);
 

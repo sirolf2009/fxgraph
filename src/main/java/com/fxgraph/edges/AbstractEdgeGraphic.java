@@ -30,7 +30,17 @@ public abstract class AbstractEdgeGraphic extends Pane {
 		return arrow;
 	}
 
-	protected void setupArrow(Region target, DoubleBinding sourceX, DoubleBinding sourceY, DoubleBinding targetX, DoubleBinding targetY) {
+	protected void setupArrow(DoubleBinding sourceX, DoubleBinding sourceY, DoubleBinding targetX, DoubleBinding targetY) {
+		// Set position bindings
+		arrow.startXProperty().bind(sourceX);
+		arrow.startYProperty().bind(sourceY);
+		arrow.endXProperty().bind(targetX);
+		arrow.endYProperty().bind(targetY);
+		// Add style
+		arrow.getStyleClass().add("arrow");
+	}
+
+	protected void setupArrowIntersect(Region target, DoubleBinding sourceX, DoubleBinding sourceY, DoubleBinding targetX, DoubleBinding targetY) {
 		// Fallback point, should not be necessary for normal shapes
 		final Point2D fallback = new Point2D(targetX.get(), targetY.get());
 		// Calculate where the arrow should be drawn based on the intersection with the shape.
@@ -46,13 +56,8 @@ public abstract class AbstractEdgeGraphic extends Pane {
 				target).orElse(fallback).getY(),
 				// dependency properties
 				targetX, targetY, sourceX, sourceY);
-		// Set position bindings
-		arrow.startXProperty().bind(sourceX);
-		arrow.startYProperty().bind(sourceY);
-		arrow.endXProperty().bind(targetXFitted);
-		arrow.endYProperty().bind(targetYFitted);
-		// Add style
-		arrow.getStyleClass().add("arrow");
+		// Set position bindings and style
+		setupArrow(sourceX, sourceY, targetXFitted, targetYFitted);
 	}
 
 	protected Optional<Point2D> getIntercept(Point2D source, Point2D target, Region shape) {

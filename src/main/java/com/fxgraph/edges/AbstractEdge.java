@@ -21,6 +21,10 @@ public abstract class AbstractEdge implements IEdge {
 			throw new NullPointerException("Target cannot be null");
 		}
 
+		linkCells();
+	}
+
+	protected void linkCells() {
 		source.addCellParent(target);
 		target.addCellChild(source);
 	}

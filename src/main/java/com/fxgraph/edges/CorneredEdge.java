@@ -67,7 +67,7 @@ public class CorneredEdge extends AbstractEdge {
 
 				if (edge.isDirected()) {
 					Region target = graph.getGraphic(edge.getTarget());
-					setupArrow(target, targetX, sourceY, targetX, targetY);
+					setupArrowIntersect(target, targetX, sourceY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					final Line lineB = new Line();
@@ -91,7 +91,7 @@ public class CorneredEdge extends AbstractEdge {
 
 				if (edge.isDirected()) {
 					Region target = graph.getGraphic(edge.getTarget());
-					setupArrow(target, sourceX, targetY, targetX, targetY);
+					setupArrowIntersect(target, sourceX, targetY, targetX, targetY);
 					group.getChildren().add(arrow);
 				} else {
 					final Line lineB = new Line();

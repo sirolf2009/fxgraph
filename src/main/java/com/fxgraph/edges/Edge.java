@@ -46,7 +46,7 @@ public class Edge extends AbstractEdge {
 
 			if (edge.isDirected()) {
 				Region target = graph.getGraphic(edge.getTarget());
-				setupArrow(target, sourceX, sourceY, targetX, targetY);
+				setupArrowIntersect(target, sourceX, sourceY, targetX, targetY);
 				group.getChildren().add(arrow);
 			} else {
 				line.startXProperty().bind(sourceX);
